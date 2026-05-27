@@ -1,0 +1,19 @@
+Week 3 (Mar 9 - Mar 22)
+
+Meeting 13th March - Daniella had done a good chunk of her user story and Khansa started
+hers. Sophie was working locally but met with Daniella to resolve issues with pulling and
+merging code.
+
+Online meeting 14th March - Checked in on how everyone's code was going. Members shared 
+their screens to show code and talked about their progress. Daniella helped Nasrien with 
+merging issues.
+
+Week 4 (Mar 16 - Mar 22)
+
+Meeting 15-17th March - Everyone's user stories are in progress. Daniella done 
+and waiting for Jabir's code, Khansa done with backend, Nasrien having issues
+connecting frontend with backend, Jabir progressing with his code.
+
+Meeting 16-20th March - Met with supervisor where we got a chance to 
+summarise our progress so far and how much we can do by the upcoming 
+submission. Used the remaining time to work on user stories.

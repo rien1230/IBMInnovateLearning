@@ -1,0 +1,41 @@
+----------- Week 1 (Jan 16 – Jan 23) -----------
+Group chat created
+
+Meeting 1 - 17th Jan  --------------------------
+    Created a general document for Sprint 0 including rules, roles 
+
+    Decided on: 
+    Sophie smw54 Contributions and Documentation Overseer 
+    Contacts individuals as well as writes up notes during meetings 
+
+    Daniella dom10 QA 
+    Checks rubric and feedback to work  
+
+    Anika ha393 Team Liaison 
+    Contacts supervisor  
+
+    Jabir mja58 Submission Tracker 
+    Submits the assignments as well as checks we are running on time 
+
+    Khansa km611 Meetings Organiser 
+    Sets up meetings for the group and notarises a todo list for our meetings
+
+    Nasrien ns632 Timekeeper 
+    Constantly checking deadlines as well as making sure work planned is done within the meetings 
+
+Meeting 2 – 21st Jan ---------------------------
+    Had a new member assigned to the group (Anika) so caught them up on things decided last meeting 
+    Began brainstorming ideas for our gamification features: 
+        Looked at existing solutions and systems we were familiar with such as: Duolingo, Seneca etc. 
+
+Submitted our Sprint 0 formative tasks to submission point on Blackboard 
+
+----------- Week 2 (Jan 24 – Jan 29) -----------
+
+Added discussed roles and rules to a read me markdown file in the repo for general information as well as a hub for any links we need easy access to. 
+
+Concerns were raised about how technical the project would be, “would we be pulling data from the courses on the IBM website?” and “would we be simulating the course?” 
+Anika - assigned liason contacted supervisor
+
+Made sure each member had submitted their text file 
+Discussed Definitions of Done – submitted to the repo by Khansa 

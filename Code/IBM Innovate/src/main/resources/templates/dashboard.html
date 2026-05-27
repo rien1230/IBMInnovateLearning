@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="auth.js"></script>
+    <script defer>
+        document.addEventListener("DOMContentLoaded", function () {
+            const loginExpPopup = document.getElementById("daily-login-popup");
+            const closePopupBtn = document.getElementById("close-popup");
+            const loginExpIcon = document.getElementById("daily-login-icon");
+            const hasSeenPopup = sessionStorage.getItem("seenLoginExp");
+
+            if (!hasSeenPopup) {
+                loginExpPopup.style.display = "block";
+                sessionStorage.setItem("seenLoginExp", "true");
+            }
+
+            closePopupBtn.addEventListener("click", function () {
+                loginExpPopup.style.display = "none";
+            });
+
+            loginExpIcon.addEventListener("click", function () {
+                loginExpPopup.style.display = "block";
+            });
+        });
+    </script>
+    <style>
+        body { font-family: Arial, sans-serif; text-align: center; }
+
+        .hidden {
+            display: none !important;
+        }
+    </style>
+</head>
+<body class="bg-gradient-to-bl from-white via-sky-200 via-sky-400/100 to-blue-500">
+<nav class="bg-white shadow-md">
+    <div class="max-w-6xl mx-auto px-4">
+        <div class="flex justify-between items-center py-4">
+            <a href="/dashboard" class="text-2xl font-bold text-blue-600">IBMinnovate</a>
+            <div class="flex space-x-4 items-center">
+                <a href="/courses" class="text-gray-700 hover:text-blue-600">All Courses</a>
+                <a href="/dashboard" class="text-gray-700 hover:text-blue-600">Dashboard</a>
+                <a href="/leaderboard" class="text-gray-700 hover:text-blue-600">Global Leaderboard</a>
+                <a href="/friends" class="text-gray-700 hover:text-blue-600">Friends</a>
+                <img id="nav-profile-picture" src="uploads/default.png" alt="Profile Picture"
+                     class="w-8 h-8 rounded-full object-cover cursor-pointer">
+                <a href="/profile" class="text-gray-700 hover:text-blue-600">Profile</a>
+                <a href="/logout" id="logoutLink" class="text-gray-700 hover:text-blue-600">Log out</a>
+                <!-- Daily Login Icon with Notification -->
+                <div class="relative">
+                    <button id="daily-login-icon" class="text-gray-700 hover:text-blue-600">
+                        📅
+                        <span id="daily-login-notification" class="absolute top-0 right-0 bg-red-500 text-white text-xs rounded-full px-1 hidden">!</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</nav>
+<div id="profile-popup" class="hidden fixed top-0 right-0 w-80 h-90 bg-white shadow-lg p-6 z-50">
+    <button id="close-popup" class="absolute top-4 right-4 text-gray-600">✖</button>
+    <h2 class="text-xl font-bold mb-4">User Profile</h2>
+    <img id="popup-profile-picture" src="default.png" class="w-24 h-24 rounded-full mx-auto mb-4" alt="Profile Picture">
+    <p class="text-center text-gray-700"><strong>Name:</strong> <span id="profile-name">John Doe</span></p>
+    <p class="text-center text-gray-700"><strong>Email:</strong> <span id="profile-email">johndoe@example.com</span></p>
+    <!-- EXP Gauge -->
+    <div class="mt-4">
+        <h3 class="text-lg font-bold">Experience Progress</h3>
+        <div class="relative w-64 h-6 bg-gray-200 rounded-full overflow-hidden">
+            <div id="exp-bar" class="h-full transition-all duration-300" style="width: 0%;"></div>
+        </div>
+        <p class="mt-2">Level <span id="level">1</span> | EXP: <span id="exp-display">0/100</span></p>
+    </div>
+</div>
+
+<!-- Daily Login Popup -->
+<div id="daily-login-popup" class="hidden fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
+    <div class="bg-white text-gray-900 p-6 rounded-lg shadow-lg text-center">
+        <h2 class="text-lg font-bold">Daily Login Bonus</h2>
+        <p class="mt-2">Select the day to claim your EXP:</p>
+        <div class="grid grid-cols-7 gap-2 mt-4">
+            <button class="p-2 bg-blue-500 text-white rounded-lg" data-day="0">Sunday</button>
+            <button class="p-2 bg-blue-500 text-white rounded-lg" data-day="1">Monday</button>
+            <button class="p-2 bg-blue-500 text-white rounded-lg" data-day="2">Tuesday</button>
+            <button class="p-2 bg-blue-500 text-white rounded-lg" data-day="3">Wednesday</button>
+            <button class="p-2 bg-blue-500 text-white rounded-lg" data-day="4">Thursday</button>
+            <button class="p-2 bg-blue-500 text-white rounded-lg" data-day="5">Friday</button>
+            <button class="p-2 bg-blue-500 text-white rounded-lg" data-day="6">Saturday</button>
+        </div>
+        <button id="close-daily-login-popup" class="mt-4 px-4 py-2 bg-red-500 hover:bg-red-600 rounded-lg">Close</button>
+    </div>
+</div>
+<br>
+<br>
+<div class="max-w-6xl mx-auto">
+    <h1 class="text-3xl font-bold text-gray-800 mb-6">Dashboard</h1>
+
+    <!-- User Progress Overview -->
+    <div class="bg-white p-6 rounded-lg shadow-md mb-6">
+        <h2 class="text-xl font-semibold mb-4">Your Progress</h2>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div class="bg-blue-50 p-4 rounded-lg">
+                <h3 class="text-lg font-medium">Completed Courses</h3>
+                <p class="text-2xl font-bold" id="completedCount">0</p>
+            </div>
+            <div class="bg-green-50 p-4 rounded-lg">
+                <h3 class="text-lg font-medium">In Progress</h3>
+                <p class="text-2xl font-bold" id="ongoingCount">0</p>
+            </div>
+            <div class="bg-yellow-50 p-4 rounded-lg">
+                <h3 class="text-lg font-medium">My Streak 🔥</h3>
+                <p id="streakDisplay" class="text-2xl font-bold"></p>
+            </div>
+
+
+        </div>
+        <a href="/progress" class="mt-4 inline-block bg-blue-800 text-white rounded-lg px-4 py-2 hover:bg-blue-900">Check Progress →</a>
+    </div>
+
+
+    <!-- Quick Actions -->
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
+        <a href="https://skills.yourlearning.ibm.com/" class="bg-white p-6 rounded-lg shadow-md hover:shadow-lg transition-shadow">
+            <h3 class="text-xl font-semibold mb-2">Continue Learning</h3>
+            <p class="text-gray-600">Pick up where you left off.</p>
+        </a>
+        <a href="https://skills.yourlearning.ibm.com/credentials/credentials" class="bg-white p-6 rounded-lg shadow-md hover:shadow-lg transition-shadow">
+            <h3 class="text-xl font-semibold mb-2">View Certificates</h3>
+            <p class="text-gray-600">See your earned certifications.</p>
+        </a>
+        <a href="/courses" class="bg-white p-6 rounded-lg shadow-md hover:shadow-lg transition-shadow">
+            <h3 class="text-xl font-semibold mb-2">Explore New Courses</h3>
+            <p class="text-gray-600">Discover new topics to learn.</p>
+        </a>
+    </div>
+
+    <!-- Recommended Courses -->
+    <div class="mb-6">
+        <h2 class="text-2xl font-bold text-gray-800 mb-4">Recommended for You</h2>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div class="bg-white p-4 shadow-md rounded-md hover:shadow-lg transition-shadow">
+                <img src="Artificial-Intelligence-Getting-Started.webp" alt="AI Course" class="w-full h-40 object-cover rounded-md">
+                <h2 class="text-xl font-semibold mt-4">Artificial Intelligence: Getting Started</h2>
+                <p class="text-gray-600">Tags: AI, Beginner, Machine Learning</p>
+                <p class="text-gray-600">Duration: 4 weeks</p>
+                <p class="text-gray-600">Languages: English</p>
+                <a href="#" class="text-blue-500 mt-2 inline-block">Learn More →</a>
+            </div>
+            <div class="bg-white p-4 shadow-md rounded-md hover:shadow-lg transition-shadow">
+                <img src="AI-colla-IBM-ISTE.webp" alt="AI Foundations" class="w-full h-40 object-cover rounded-md">
+                <h2 class="text-xl font-semibold mt-4">AI Foundations: A Collaboration of ISTE and IBM</h2>
+                <p class="text-gray-600">Tags: AI, ISTE, IBM</p>
+                <p class="text-gray-600">Duration: 14 hours</p>
+                <p class="text-gray-600">Languages: English, Spanish</p>
+                <a href="#" class="text-blue-500 mt-2 inline-block">Learn More →</a>
+            </div>
+            <div class="bg-white p-4 shadow-md rounded-md hover:shadow-lg transition-shadow">
+                <img src="AI-funda.webp" alt="AI Fundamentals" class="w-full h-40 object-cover rounded-md">
+                <h2 class="text-xl font-semibold mt-4">Artificial Intelligence Fundamentals</h2>
+                <p class="text-gray-600">Tags: AI, Fundamentals</p>
+                <p class="text-gray-600">Duration: 10 hours</p>
+                <p class="text-gray-600">Languages: English, French</p>
+                <a href="#" class="text-blue-500 mt-2 inline-block">Learn More →</a>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+
+
+<script src="/dashboard.js"></script>
+<script>
+    // Only modify the friends link
+    document.addEventListener('DOMContentLoaded', function() {
+        const userId = localStorage.getItem('userId');
+        const friendsLink = document.querySelector('a[href="/friends"]');
+        if (userId && friendsLink) {
+            friendsLink.href = `/friends?userId=${userId}`;
+        }
+    });
+</script>
+</body>
+</html>

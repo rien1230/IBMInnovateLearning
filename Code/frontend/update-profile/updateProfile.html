@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Change Account Details</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f8ff;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #e0f7fa;
+        }
+
+        .form-container {
+            background-color: #ffffff;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 400px;
+        }
+
+        .form-container h2 {
+            text-align: center;
+            color: #007bb5;
+        }
+
+        .form-container label {
+            font-size: 14px;
+            color: #333333;
+            display: block;
+            margin: 10px 0 5px;
+        }
+
+        .form-container input[type="text"],
+        .form-container input[type="email"],
+        .form-container input[type="password"] {
+            width: 100%;
+            padding: 10px;
+            margin: 8px 0;
+            border: 2px solid #007bb5;
+            border-radius: 5px;
+            font-size: 16px;
+            box-sizing: border-box;
+        }
+
+        .form-container input[type="submit"] {
+            background-color: #007bb5;
+            color: white;
+            padding: 12px 20px;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            width: 100%;
+            cursor: pointer;
+        }
+
+        .form-container input[type="submit"]:hover {
+            background-color: #005f8a;
+        }
+
+        .form-container .error {
+            color: red;
+            font-size: 12px;
+            margin-top: 5px;
+        }
+
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background-color: #4caf50;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 5px;
+            display: none;
+            z-index: 1000;
+            font-size: 16px;
+        }
+
+        .back-button {
+            position: fixed;
+            top: 80px;
+            left: 30px;
+            background-color: #007bb5;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+            z-index: 1000;
+        }
+
+        .back-button:hover {
+            background-color: #005f8a;
+        }
+    </style>
+</head>
+<body>
+<!-- Back Button that takes the user to the dashboard again-->
+<!-- Need to add in the correct link to the dashboard-->
+<a href="main.html">
+    <button class="back-button">Go Back</button>
+</a>
+<div class="container">
+    <div class="form-container">
+        <h2>Change Account Details</h2>
+        <form action="#" method="POST" id="updateForm">
+            <label for="email">New Email</label>
+            <input type="email" id="email" name="email" required>
+
+            <label for="password">New Password</label>
+            <input type="password" id="password" name="password" required>
+
+            <label for="confirm_password">Re-enter New Password</label>
+            <input type="password" id="confirm_password" name="confirm_password" required>
+
+            <input type="submit" value="Update">
+
+            <div class="error" id="passwordError" style="display: none;">Passwords do not match.</div>
+        </form>
+    </div>
+</div>
+<!-- Notification -->
+<div class="notification" id="updateNotification">Your details have been updated!</div>
+<script>
+    document.getElementById("updateForm").addEventListener("submit", function(event) {
+        const password = document.getElementById("password").value;
+        const confirmPassword = document.getElementById("confirm_password").value;
+
+        if (password !== confirmPassword) {
+            event.preventDefault();
+            document.getElementById("passwordError").style.display = "block";
+        } else {
+            document.getElementById("passwordError").style.display = "none";
+            // Show notification
+            event.preventDefault(); // Prevent form submission for now
+            document.getElementById("updateNotification").style.display = "block";
+
+            // Hides notification after 3 secs
+            setTimeout(function() {
+                document.getElementById("updateNotification").style.display = "none";
+            }, 3000);
+        }
+    });
+</script>
+</body>
+</html>

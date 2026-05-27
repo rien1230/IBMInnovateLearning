@@ -1,0 +1,19 @@
+Week 3 (Jan 30 – Feb 6)
+Meeting 3 – 30th Jan 
+-> Met with supervisor (Nicole) and proposed our user stories for her to approve. Decided on a tech stack 
+-> Created issues and assigned members and co-members to be secondary on these
+
+Meeting 4 - 6th Feb- 
+-> Sprint 1 Planning meeting to discuss development of features. Concerns were raised about how viable using react would be for the whole group. 
+-> Branches were made + scrum board created, assigned weights to issues 
+
+Week 4 (Feb 7 – Feb 13)
+Meeting 5 - 12th Feb
+-> Resolving coding issues 
+
+Meeting 6 - 13th Feb
+-> Met with supervisor – group voted on whether switching from react to vanilla was a viable option given the lack of experience with the tool. 
+
+Discussed adding screenshots 
+Make a low-fi prototype of the site whilst Sophie and Nasrien work on database ERD
+Sophie raised an issue with database configuration, asked for help resolving 

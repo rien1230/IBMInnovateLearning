@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard</title>
+    <link rel="stylesheet" href="styles.css">
+    <script defer>
+        document.addEventListener("DOMContentLoaded", function () {
+            const loginExpPopup = document.getElementById("login-exp-popup");
+            const closePopupBtn = document.getElementById("close-popup");
+            const loginExpIcon = document.getElementById("login-exp-icon");
+            const hasSeenPopup = sessionStorage.getItem("seenLoginExp");
+
+            if (!hasSeenPopup) {
+                loginExpPopup.style.display = "block";
+                sessionStorage.setItem("seenLoginExp", "true");
+            }
+
+            closePopupBtn.addEventListener("click", function () {
+                loginExpPopup.style.display = "none";
+            });
+
+            loginExpIcon.addEventListener("click", function () {
+                loginExpPopup.style.display = "block";
+            });
+        });
+    </script>
+</head>
+<body>
+<nav>
+    <ul>
+        <li><a href="#">Home</a></li>
+        <li><a href="#">Profile</a></li>
+        <li><a href="#" id="login-exp-icon">Login Exp</a></li>
+    </ul>
+</nav>
+<div id="login-exp-popup" style="display: none;">
+    <div class="popup-content">
+        <p>Welcome to your dashboard experience!</p>
+        <button id="close-popup">Close</button>
+    </div>
+</div>
+</body>
+</html>

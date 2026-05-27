@@ -1,0 +1,5 @@
+1. Testing completed
+2. Peer reviewed
+3. Code contains no errors
+4. Meets client's defined expectations
+5. Code meets the functional requirements

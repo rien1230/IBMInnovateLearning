@@ -1,0 +1,813 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profile</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/@material-tailwind/html@latest/scripts/script-name.js"></script>
+    <style>
+        .achievement-card {
+            margin-bottom: 20px;
+            border: 1px solid #ddd;
+            border-radius: 10px;
+            padding: 15px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            position: relative;
+            width: 200px;
+            height: 200px;
+            perspective: 1000px;
+            cursor: pointer;
+        }
+        .achievement-card .front,
+        .achievement-card .back {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            backface-visibility: hidden;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            transition: transform 0.6s;
+        }
+        .achievement-card .front {
+            background: linear-gradient(135deg, #ff9a9e, #fad0c4);
+            color: white;
+            font-size: 20px;
+            font-weight: bold;
+        }
+        .achievement-card .back {
+            background: linear-gradient(135deg, #a1c4fd, #c2e9fb);
+            color: #333;
+            transform: rotateY(180deg);
+            padding: 10px;
+        }
+        .achievement-card:hover .front {
+            transform: rotateY(180deg);
+        }
+        .achievement-card:hover .back {
+            transform: rotateY(0deg);
+        }
+
+        .avatar-section {
+            width: 40%;
+            background-size: cover;
+            background-position: center;
+            position: relative;
+        }
+
+        .sidebar {
+            width: 250px;
+            background-color: #f8f9fa;
+            padding: 20px;
+            height: calc(100vh - 80px); /* Adjust height to fit below the nav bar */
+            position: fixed;
+            left: 0;
+            top: 80px; /* Position below the nav bar */
+        }
+
+        .sidebar a {
+            display: block;
+            padding: 10px;
+            color: #333;
+            text-decoration: none;
+            border-radius: 5px;
+            margin-bottom: 5px;
+        }
+
+        .sidebar a:hover {
+            background-color: #e9ecef;
+        }
+
+        .content {
+            margin-left: 270px; /* Adjust margin to accommodate the sidebar */
+            padding: 20px;
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        .locked {
+            filter: blur(5px);
+            pointer-events: none;
+            position: relative;
+        }
+
+        .locked::after {
+            content: "Locked until exp is 1200";
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: white;
+            font-size: 20px;
+            font-weight: bold;
+            text-align: center;
+        }
+    </style>
+</head>
+<body class="bg-gradient-to-bl from-white via-sky-200 via-sky-400/100 to-blue-500">
+<nav class="bg-white shadow-md">
+    <div class="max-w-6xl mx-auto px-4">
+        <div class="flex justify-between items-center py-4">
+            <!-- Back Button -->
+            <a href="/dashboard" class="text-2xl font-bold text-blue-600">← Back</a>
+            <a href="/dashboard" class="text-2xl font-bold text-blue-600">IBMinnovate</a>
+            <div class="flex space-x-4">
+                <a href="/courses" class="text-gray-700 hover:text-blue-600">All Courses</a>
+                <a href="/dashboard" class="text-gray-700 hover:text-blue-600">Dashboard</a>
+                <a href="/profile" class="text-gray-700 hover:text-blue-600">Profile</a>
+                <a href="/logout" id="logoutLink" class="text-gray-700 hover:text-blue-600">Log out</a>
+            </div>
+        </div>
+    </div>
+</nav>
+
+<!-- Sidebar -->
+<div class="sidebar">
+    <a href="#" onclick="loadContent('profile')">Profile</a>
+    <a href="#" onclick="loadContent('manage-profile')">Manage Profile</a>
+    <a href="#" onclick="loadContent('avatar')">Avatar</a>
+    <a href="#" onclick="loadContent('badges')">Badges</a>
+</div>
+
+<!-- Main Content -->
+<div class="content">
+    <!-- Profile Content -->
+    <div id="profile-content" class="tab-content active">
+        <div class="max-w-4xl mx-auto mt-10 p-6 bg-white rounded-lg shadow-md">
+            <div class="flex">
+                <div class="flex-1">
+                    <div class="mb-6">
+                        <div class="flex items-center space-x-4">
+                            <div class="w-16 h-16 bg-gray-200 rounded-full flex items-center justify-center overflow-hidden relative" onclick="document.getElementById('profile-image-upload').click()">
+                                <img id="profile-image" src="fallback-image.png" alt="Profile Image" class="w-full h-full object-cover">
+                                <input
+                                        type="file"
+                                        id="profile-image-upload"
+                                        accept=".png, image/png"
+                                        class="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+                                        onchange="handleImageUpload(event)"
+                                />
+                                <div class="absolute inset-0 flex items-center justify-center bg-black bg-opacity-50 opacity-0 hover:opacity-100 transition-opacity">
+                                    <span class="text-white text-sm font-semibold">Upload</span>
+                                </div>
+                            </div>
+                            <div>
+                                <h2 class="text-2xl font-semibold text-gray-800" id="usernameDisplay"></h2>
+                                <p class="text-gray-600">User ID: <span id="userIdDisplay"></span></p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="mb-6">
+                        <h3 class="text-xl font-semibold text-gray-800 mb-4">Achievements</h3>
+                        <div class="flex flex-wrap gap-4">
+                            <div class="achievement-card">
+                                <div class="front">
+                                    LLM Explorer
+                                </div>
+                                <div class="back">
+                                    You've mastered the basics of Large Language Models! Use this knowledge to build smarter chatbots.
+                                </div>
+                            </div>
+                            <div class="achievement-card">
+                                <div class="front">
+                                    Chatbot Creator
+                                </div>
+                                <div class="back">
+                                    You can now build your own chatbots! Try creating one for your business or personal projects.
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="avatar-section" class="avatar-section">
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Manage Profile Content -->
+    <div id="manage-profile-content" class="tab-content">
+        <div class="max-w-4xl mx-auto mt-10 p-6 bg-white rounded-lg shadow-md">
+            <h2 class="text-2xl font-semibold text-gray-800">Manage Profile</h2>
+            <!-- Content will be dynamically loaded here -->
+            <div id="manage-profile-dynamic-content"></div>
+        </div>
+    </div>
+
+    <!-- Avatar Content -->
+    <div id="avatar-content" class="tab-content">
+        <div class="w-full">
+            <div class="relative right-0">
+                <!-- Tab Navigation -->
+                <ul class="relative flex flex-wrap px-1.5 py-1.5 list-none rounded-md bg-slate-100" data-tabs="tabs" role="list">
+                    <li class="z-30 flex-auto text-center">
+                        <a class="z-30 flex items-center justify-center w-full px-0 py-2 text-sm mb-0 transition-all ease-in-out border-0 rounded-md cursor-pointer text-slate-600 bg-inherit"
+                           data-tab-target="#beginner-tab" role="tab" aria-selected="true" aria-controls="beginner-tab">
+                            Beginner
+                        </a>
+                    </li>
+                    <li class="z-30 flex-auto text-center">
+                        <a class="z-30 flex items-center justify-center w-full px-0 py-2 mb-0 text-sm transition-all ease-in-out border-0 rounded-lg cursor-pointer text-slate-600 bg-inherit"
+                           data-tab-target="#intermediate-tab" role="tab" aria-selected="false" aria-controls="intermediate-tab">
+                            Intermediate
+                        </a>
+                    </li>
+                    <li class="z-30 flex-auto text-center">
+                        <a class="z-30 flex items-center justify-center w-full px-0 py-2 text-sm mb-0 transition-all ease-in-out border-0 rounded-lg cursor-pointer text-slate-700 bg-inherit"
+                           data-tab-target="#pro-tab" role="tab" aria-selected="false" aria-controls="pro-tab">
+                            Pro
+                        </a>
+                    </li>
+                </ul>
+
+                <!-- Tab Content -->
+                <div data-tab-content="" class="p-5">
+                    <!-- Beginner Tab -->
+                    <div id="beginner-tab" role="tabpanel" class="active">
+                        <div class="mt-4">
+                            <h3 class="text-xl font-semibold text-gray-800">Beginner Avatar Customization</h3>
+                            <!-- Beginner customization content here -->
+                            <div class="max-w-4xl mx-auto mt-10 p-6 bg-white rounded-lg shadow-md">
+                                <h1 class="text-2xl font-bold text-center mb-6">Custom Avatar Generator</h1>
+
+                                <!-- Avatar Display -->
+                                <div class="flex justify-center mb-8">
+                                    <img id="avatar" src="https://avataaars.io/?avatarStyle=Circle&topType=LongHairStraight&accessoriesType=Blank&hairColor=BrownDark&facialHairType=Blank&clotheType=BlazerShirt&eyeType=Default&eyebrowType=Default&mouthType=Default&skinColor=Light" alt="Avatar" width="250" class="rounded-full">
+                                </div>
+
+                                <!-- Customization Options -->
+                                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                    <!-- Avatar Style -->
+                                    <fieldset class="col-span-2">
+                                        <legend class="text-lg font-semibold mb-2">Avatar Style</legend>
+                                        <div class="flex gap-4">
+                                            <label class="flex items-center gap-2">
+                                                <input type="radio" name="avatarStyle" value="Circle" checked onchange="updateAvatar()" class="form-radio">
+                                                Circle
+                                            </label>
+                                            <label class="flex items-center gap-2">
+                                                <input type="radio" name="avatarStyle" value="Transparent" onchange="updateAvatar()" class="form-radio">
+                                                Transparent
+                                            </label>
+                                        </div>
+                                    </fieldset>
+
+                                    <!-- Top Type -->
+                                    <div>
+                                        <label for="topType" class="block text-sm font-medium text-gray-700">Top:</label>
+                                        <select id="topType" onchange="updateAvatar()" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm">
+                                            <option value="LongHairStraight">Long Hair</option>
+                                            <option value="ShortHairShortFlat">Short Hair</option>
+                                            <option value="NoHair">Bald</option>
+                                        </select>
+                                    </div>
+
+                                    <!-- Accessories Type -->
+                                    <div>
+                                        <label for="accessoriesType" class="block text-sm font-medium text-gray-700">Accessories:</label>
+                                        <select id="accessoriesType" onchange="updateAvatar()" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm">
+                                            <option value="Blank">None</option>
+                                            <option value="PrescriptionGlasses">Glasses</option>
+                                            <option value="Round">Round Glasses</option>
+                                        </select>
+                                    </div>
+
+                                    <!-- Hair Color -->
+                                    <div>
+                                        <label for="hairColor" class="block text-sm font-medium text-gray-700">Hair Color:</label>
+                                        <select id="hairColor" onchange="updateAvatar()" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm">
+                                            <option value="BrownDark">Brown Dark</option>
+                                            <option value="Black">Black</option>
+                                            <option value="Blonde">Blonde</option>
+                                        </select>
+                                    </div>
+
+                                    <!-- Facial Hair Type -->
+                                    <div>
+                                        <label for="facialHairType" class="block text-sm font-medium text-gray-700">Facial Hair:</label>
+                                        <select id="facialHairType" onchange="updateAvatar()" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm">
+                                            <option value="Blank">None</option>
+                                            <option value="BeardMedium">Medium Beard</option>
+                                            <option value="BeardLight">Light Beard</option>
+                                        </select>
+                                    </div>
+
+                                    <!-- Clothe Type -->
+                                    <div>
+                                        <label for="clotheType" class="block text-sm font-medium text-gray-700">Clothes:</label>
+                                        <select id="clotheType" onchange="updateAvatar()" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm">
+                                            <option value="BlazerShirt">Blazer Shirt</option>
+                                            <option value="Hoodie">Hoodie</option>
+                                            <option value="ShirtCrewNeck">Crew Neck Shirt</option>
+                                        </select>
+                                    </div>
+
+                                    <!-- Eye Type -->
+                                    <div>
+                                        <label for="eyeType" class="block text-sm font-medium text-gray-700">Eyes:</label>
+                                        <select id="eyeType" onchange="updateAvatar()" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm">
+                                            <option value="Default">Default</option>
+                                            <option value="Happy">Happy</option>
+                                            <option value="Squint">Squint</option>
+                                        </select>
+                                    </div>
+
+                                    <!-- Eyebrow Type -->
+                                    <div>
+                                        <label for="eyebrowType" class="block text-sm font-medium text-gray-700">Eyebrow:</label>
+                                        <select id="eyebrowType" onchange="updateAvatar()" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm">
+                                            <option value="Default">Default</option>
+                                            <option value="Angry">Angry</option>
+                                            <option value="RaisedExcited">Raised Excited</option>
+                                        </select>
+                                    </div>
+
+                                    <!-- Mouth Type -->
+                                    <div>
+                                        <label for="mouthType" class="block text-sm font-medium text-gray-700">Mouth:</label>
+                                        <select id="mouthType" onchange="updateAvatar()" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm">
+                                            <option value="Default">Default</option>
+                                            <option value="Smile">Smile</option>
+                                            <option value="Serious">Serious</option>
+                                        </select>
+                                    </div>
+
+                                    <!-- Skin Color -->
+                                    <div>
+                                        <label for="skinColor" class="block text-sm font-medium text-gray-700">Skin Color:</label>
+                                        <select id="skinColor" onchange="updateAvatar()" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm">
+                                            <option value="Light">Light</option>
+                                            <option value="Brown">Brown</option>
+                                            <option value="DarkBrown">Dark Brown</option>
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <!-- Save Avatar Button -->
+                                <div class="mt-6 text-center">
+                                    <button onclick="saveAvatar()" class="bg-blue-600 text-white rounded-lg px-6 py-2 hover:bg-blue-700 transition duration-300">
+                                        Save Avatar
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Intermediate Tab -->
+                    <div id="intermediate-tab" role="tabpanel" class="hidden opacity-0">
+                        <div class="mt-4">
+                            <h3 class="text-xl font-semibold text-gray-800">Intermediate Avatar Customization</h3>
+                            <!-- Intermediate customization content here -->
+                            <div class="max-w-4xl mx-auto mt-10 p-6 bg-white rounded-lg shadow-md">
+                                <h1 class="text-2xl font-bold text-center mb-6">DiceBear Avatar Generator</h1>
+
+                                <!-- Avatar Display -->
+                                <div class="flex justify-center mb-8">
+                                    <img id="dicebear-avatar" src="https://api.dicebear.com/7.x/adventurer/svg?seed=JohnDoe" alt="Avatar" width="250" class="rounded-full">
+                                </div>
+
+                                <!-- Customization Options -->
+                                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                    <!-- Seed -->
+                                    <div>
+                                        <label for="seed" class="block text-sm font-medium text-gray-700">Seed:</label>
+                                        <input type="text" id="seed" value="JohnDoe" oninput="updateDiceBearAvatar()" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm">
+                                    </div>
+
+                                    <!-- Style -->
+                                    <div>
+                                        <label for="style" class="block text-sm font-medium text-gray-700">Style:</label>
+                                        <select id="style" onchange="updateDiceBearAvatar()" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm">
+                                            <option value="adventurer">Adventurer</option>
+                                            <option value="avataaars">Avataaars</option>
+                                            <option value="bottts">Bottts</option>
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <!-- Save Avatar Button -->
+                                <div class="mt-6 text-center">
+                                    <button onclick="saveDiceBearAvatar()" class="bg-blue-600 text-white rounded-lg px-6 py-2 hover:bg-blue-700 transition duration-300">
+                                        Save Avatar
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Pro Tab -->
+                    <div id="pro-tab" role="tabpanel" class="hidden opacity-0">
+                        <div class="mt-4">
+                            <h3 class="text-xl font-semibold text-gray-800">Pro Avatar Customization</h3>
+                            <!-- Pro customization content here -->
+                            <div class="max-w-4xl mx-auto mt-10 p-6 bg-white rounded-lg shadow-md text-center">
+                                <h2 class="text-2xl font-semibold text-gray-800 mb-4">Customize Your Avatar</h2>
+                                <p class="text-gray-600 mb-4">Use the Ready Player Me avatar system to create a unique look!</p>
+
+                                <!-- Ready Player Me Iframe -->
+                                <iframe
+                                        src="https://readyplayer.me/avatar?frameApi"
+                                        style="width: 100%; height: 600px; border: none;"
+                                        allow="camera; microphone; clipboard-write">
+                                </iframe>
+
+                                <!-- Save Button -->
+                                <button onclick="saveReadyPlayerMeAvatar()" class="mt-4 px-6 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition duration-300">
+                                    Save Avatar
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Badges Content -->
+    <div id="badges-content" class="tab-content">
+        <div class="max-w-4xl mx-auto mt-10 p-6 bg-white rounded-lg shadow-md">
+            <h2 class="text-2xl font-semibold text-gray-800">Badges</h2>
+            <!-- Badges content here -->
+        </div>
+    </div>
+</div>
+
+<script>
+    // Function to load content dynamically
+    async function loadContent(section) {
+        // Hide all tab content
+        document.querySelectorAll('.tab-content').forEach(tab => {
+            tab.classList.remove('active');
+        });
+
+        // Show the selected tab content
+        const tabContent = document.getElementById(`${section}-content`);
+        if (tabContent) {
+            tabContent.classList.add('active');
+        }
+
+        // If the section is "manage-profile", fetch the content from /update
+        if (section === 'manage-profile') {
+            await loadManageProfileContent();
+        }
+
+        // If the section is "avatar", initialize the avatar tabs
+        if (section === 'avatar') {
+            initializeAvatarTabs();
+        }
+    }
+
+    // Function to initialize avatar tabs
+    function initializeAvatarTabs() {
+        const tabs = document.querySelectorAll('[data-tab-target]');
+        const tabContents = document.querySelectorAll('[role="tabpanel"]');
+
+        tabs.forEach(tab => {
+            tab.addEventListener('click', () => {
+                const target = document.querySelector(tab.dataset.tabTarget);
+                tabContents.forEach(tabContent => {
+                    tabContent.classList.add('hidden', 'opacity-0');
+                });
+                target.classList.remove('hidden', 'opacity-0');
+            });
+        });
+    }
+
+    // Function to load manage profile content from /update
+    // Function to load manage profile content from /update
+    async function loadManageProfileContent() {
+        try {
+            const token = localStorage.getItem('token');
+            const response = await fetch('/update', {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`
+                }
+            });
+
+            if (response.ok) {
+                const data = await response.text(); // Assuming the response is HTML
+                document.getElementById('manage-profile-dynamic-content').innerHTML = data;
+
+                // Execute JavaScript code from the loaded content
+                const scriptTags = document.getElementById('manage-profile-dynamic-content').getElementsByTagName('script');
+                for (let script of scriptTags) {
+                    const newScript = document.createElement('script');
+                    if (script.src) {
+                        newScript.src = script.src; // Load external scripts
+                    } else {
+                        newScript.textContent = script.textContent; // Execute inline scripts
+                    }
+                    document.body.appendChild(newScript).remove(); // Append and remove to execute
+                }
+            } else {
+                console.error('Failed to fetch manage profile content');
+            }
+        } catch (error) {
+            console.error('Error fetching manage profile content:', error);
+        }
+    }
+
+    // Function to show avatar customization tabs
+    function showTab(tab) {
+        document.querySelectorAll('.tab-content').forEach(tabContent => {
+            tabContent.classList.remove('active');
+        });
+        document.getElementById(`${tab}-tab`).classList.add('active');
+    }
+
+    // Load profile image and avatar when the page loads
+    document.addEventListener('DOMContentLoaded', () => {
+        const token = localStorage.getItem('token');
+        const userId = localStorage.getItem('userId');
+        const username = localStorage.getItem('userName');
+
+        if (!userId || !username || !token) {
+            alert('Please log in again.');
+            window.location.href = '/login';
+        } else {
+            document.getElementById('userIdDisplay').textContent = userId;
+            document.getElementById('usernameDisplay').textContent = username;
+
+            loadProfileImage();
+            loadAvatar();
+        }
+    });
+
+    // Beginner Tab (Avataaars)
+    let avatarUrl = "";
+
+    function updateAvatar() {
+        const avatarStyle = document.querySelector('input[name="avatarStyle"]:checked').value;
+        const topType = document.getElementById("topType").value;
+        const accessoriesType = document.getElementById("accessoriesType").value;
+        const hairColor = document.getElementById("hairColor").value;
+        const facialHairType = document.getElementById("facialHairType").value;
+        const clotheType = document.getElementById("clotheType").value;
+        const eyeType = document.getElementById("eyeType").value;
+        const eyebrowType = document.getElementById("eyebrowType").value;
+        const mouthType = document.getElementById("mouthType").value;
+        const skinColor = document.getElementById("skinColor").value;
+
+        avatarUrl = `https://avataaars.io/?avatarStyle=${avatarStyle}&topType=${topType}&accessoriesType=${accessoriesType}&hairColor=${hairColor}&facialHairType=${facialHairType}&clotheType=${clotheType}&eyeType=${eyeType}&eyebrowType=${eyebrowType}&mouthType=${mouthType}&skinColor=${skinColor}`;
+        document.getElementById("avatar").src = avatarUrl;
+    }
+
+
+    //Save Avatar for Beginner Tab (Avataaars)
+    async function saveAvatar() {
+        try {
+            const userId = localStorage.getItem('userId');
+            const token = localStorage.getItem('token');
+
+            // Convert the avatar URL to a Blob
+            const response = await fetch(avatarUrl);
+            const blob = await response.blob();
+
+            // Create a FormData object to send the file
+            const formData = new FormData();
+            formData.append('file', blob, `user_${userId}_avatar.png`);
+            formData.append('userId', userId);
+
+            // Send the file to the backend
+            const saveResponse = await fetch('http://localhost:8080/api/avatars/upload', {
+                method: 'POST',
+                headers: {
+                    'Authorization': `Bearer ${token}`
+                },
+                body: formData,
+            });
+
+            if (saveResponse.ok) {
+                alert('Avatar saved successfully!');
+            } else {
+                const errorData = await saveResponse.text();
+                console.error('Failed to save avatar:', errorData);
+                alert('Failed to save avatar: ' + errorData);
+            }
+        } catch (error) {
+            console.error('Error saving avatar:', error);
+            alert('An error occurred while saving the avatar.');
+        }
+    }
+
+    // Intermediate Tab (DiceBear)
+    function updateDiceBearAvatar() {
+        const seed = document.getElementById("seed").value;
+        const style = document.getElementById("style").value;
+        const dicebearUrl = `https://api.dicebear.com/7.x/${style}/svg?seed=${seed}`;
+        document.getElementById("dicebear-avatar").src = dicebearUrl;
+    }
+
+    async function saveDiceBearAvatar() {
+        const dicebearUrl = document.getElementById("dicebear-avatar").src;
+        try {
+            const userId = localStorage.getItem('userId');
+            const token = localStorage.getItem('token');
+            const response = await fetch(`http://localhost:8080/${userId}/avatar`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`
+                },
+                body: JSON.stringify({ avatarUrl: dicebearUrl }),
+            });
+
+            if (response.ok) {
+                alert('Avatar saved successfully!');
+            } else {
+                alert('Failed to save avatar.');
+            }
+        } catch (error) {
+            console.error('Error saving avatar:', error);
+            alert('An error occurred while saving the avatar.');
+        }
+    }
+
+    // Pro Tab (Ready Player Me)
+
+    async function saveReadyPlayerMeAvatar() {
+        try {
+            const iframe = document.querySelector('iframe');
+            const avatarUrl = iframe.contentWindow.getAvatarUrl(); // Assuming Ready Player Me provides this method
+            const userId = localStorage.getItem('userId');
+            const token = localStorage.getItem('token');
+
+            const response = await fetch(`http://localhost:8080/${userId}/avatar`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`
+                },
+                body: JSON.stringify({ avatarUrl: avatarUrl }),
+            });
+
+            if (response.ok) {
+                alert('Avatar saved successfully!');
+            } else {
+                alert('Failed to save avatar.');
+            }
+        } catch (error) {
+            console.error('Error saving avatar:', error);
+            alert('An error occurred while saving the avatar.');
+        }
+    }
+
+    // Fetch Avatar URL
+    async function loadAvatar() {
+        try {
+            const userId = localStorage.getItem('userId');
+            const token = localStorage.getItem('token');
+
+            // Fetch the user's avatar file name from the backend
+            const response = await fetch(`http://localhost:8080/api/users/${userId}/avatar`, {
+                method: 'GET',
+                headers: {
+                    'Authorization': `Bearer ${token}`
+                },
+            });
+
+            if (response.ok) {
+                const data = await response.json();
+                const avatarFileName = data.avatarFileName;
+
+                // Fetch the avatar image using the file name
+                const avatarResponse = await fetch(`http://localhost:8080/api/avatars/${avatarFileName}`);
+                if (avatarResponse.ok) {
+                    const avatarBlob = await avatarResponse.blob();
+                    const avatarUrl = URL.createObjectURL(avatarBlob);
+                    document.getElementById('avatar-section').style.backgroundImage = `url('${avatarUrl}')`;
+                } else {
+                    console.error('Failed to fetch avatar image');
+                }
+            } else {
+                console.error('Failed to fetch avatar file name');
+            }
+        } catch (error) {
+            console.error('Error loading avatar:', error);
+        }
+    }
+
+    // Load saved profile image from backend
+    async function loadProfileImage() {
+        try {
+            const token = localStorage.getItem('token');
+            const response = await fetch('http://localhost:8080/get-profile-image', {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`
+                }
+            });
+
+            if (response.ok) {
+                const data = await response.json();
+                if (data.imageUrl) {
+                    document.getElementById('profile-image').src = data.imageUrl;
+                } else {
+                    console.error('No image URL found in response:', data);
+                }
+            } else {
+                const errorData = await response.json();
+                console.error('Failed to fetch profile image:', errorData.error || response.statusText);
+            }
+        } catch (error) {
+            console.error('Error fetching profile image:', error);
+        }
+    }
+
+    // Handle profile image upload
+    async function handleImageUpload(event) {
+        const file = event.target.files[0];
+        if (file) {
+            if (file.type !== 'image/png') {
+                alert('Only PNG files are allowed.');
+                return;
+            }
+
+            const reader = new FileReader();
+            reader.onload = function (e) {
+                document.getElementById('profile-image').src = e.target.result;
+            };
+            reader.readAsDataURL(file);
+
+            const formData = new FormData();
+            formData.append('image', file);
+
+            try {
+                const token = localStorage.getItem('token');
+                const response = await fetch('http://localhost:8080/upload-profile-image', {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    },
+                    body: formData
+                });
+
+                const data = await response.json();
+                if (response.ok) {
+                    alert('Profile picture updated successfully!');
+                    document.getElementById('profile-image').src = data.imageUrl;
+                } else {
+                    alert('Error uploading image: ' + (data.error || 'Unknown error'));
+                }
+            } catch (error) {
+                console.error('Upload error:', error);
+                alert('An error occurred while uploading the image.');
+            }
+        }
+    }
+
+    // Logout functionality
+    document.addEventListener('DOMContentLoaded', () => {
+        const logoutLink = document.getElementById('logoutLink');
+
+        if (logoutLink) {
+            logoutLink.addEventListener('click', async (e) => {
+                e.preventDefault();
+                const confirmLogout = confirm("Are you sure you want to log out?");
+                if (!confirmLogout) return;
+
+                try {
+                    const token = localStorage.getItem('token');
+                    const response = await fetch('/logout', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'Authorization': `Bearer ${token}`
+                        },
+                        credentials: 'include'
+                    });
+
+                    if (response.ok) {
+                        localStorage.removeItem('userId');
+                        localStorage.removeItem('userEmail');
+                        localStorage.removeItem('userName');
+                        localStorage.removeItem('current_user_type');
+                        localStorage.removeItem('token');
+                        window.location.href = "/login";
+                    } else {
+                        console.error('Logout failed');
+                    }
+                } catch (error) {
+                    console.error('Error during logout:', error);
+                }
+            });
+        }
+    });
+</script>
+</body>
+</html>

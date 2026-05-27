@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Friends | IBM Innovate</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gradient-to-br from-blue-400 to-blue-200 min-h-screen font-sans">
+
+<!-- Navbar -->
+<nav class="bg-white shadow-md">
+    <div class="max-w-7xl mx-auto px-4">
+        <div class="flex justify-between items-center py-4">
+            <a href="/dashboard" class="text-2xl font-bold text-blue-600">IBMInnovate</a>
+            <div class="flex space-x-6 items-center">
+                <a href="/courses" class="text-2xl font-bold text-blue-600">All Courses</a>
+                <a href="/dashboard" class="text-2xl font-bold text-blue-600">Dashboard</a>
+                <a href="/profile" class="text-2xl font-bold text-blue-600">Profile</a>
+            </div>
+        </div>
+    </div>
+</nav>
+
+<!-- Main Friends Content -->
+<main class="flex-1 p-8">
+    <div class="max-w-4xl mx-auto bg-white shadow-xl rounded-xl p-6">
+        <h1 class="text-2xl font-bold text-blue-800 mb-6">Friends Dashboard</h1>
+
+        <!-- Display success or error message -->
+        <div th:if="${message != null}" class="mb-4 p-4 bg-green-100 border border-green-400 text-green-700 rounded">
+            <span th:text="${message}"></span>
+        </div>
+        <div th:if="${error != null}" class="mb-4 p-4 bg-red-100 border border-red-400 text-red-700 rounded">
+            <span th:text="${error}"></span>
+        </div>
+
+        <!-- Send Friend Request -->
+        <form th:action="@{/friends/request}" method="post" class="flex gap-4 mb-8">
+            <input type="hidden" name="userId" th:value="${userId}" />
+            <input type="text" name="friendUsername" placeholder="Enter friend's username"
+                   class="flex-1 border border-gray-300 rounded px-4 py-2 focus:outline-blue-400" required />
+            <button type="submit"
+                    class="bg-blue-600 hover:bg-blue-700 text-white font-medium px-4 py-2 rounded">
+                Send Request
+            </button>
+        </form>
+
+        <!-- Accepted Friends List -->
+        <section class="mb-8">
+            <h2 class="text-xl font-semibold text-gray-700 border-b pb-2 mb-4">✅ Friends</h2>
+            <!-- Replace this entire div with your new version -->
+            <div th:each="friendship : ${friends}" th:if="${friendship.status == 'ACCEPTED'}"
+                 class="flex justify-between items-center bg-gray-100 rounded px-4 py-3 mb-2">
+                <div class="flex items-center gap-3">
+                    <img th:src="@{'uploads/default.png'}"
+                         th:alt="${friendship.friendUsername} + ' profile picture'"
+                         class="w-8 h-8 rounded-full object-cover"/>
+                    <span class="font-medium text-gray-800" th:text="${friendship.friendUsername}"></span>
+                </div>
+                <form th:action="@{/friends/remove}" method="post">
+                    <input type="hidden" name="userId" th:value="${userId}" />
+                    <input type="hidden" name="friendUsername" th:value="${friendship.friendUsername}" />
+                    <button type="submit" class="text-red-500 hover:text-red-700 text-sm">Remove</button>
+                </form>
+            </div>
+            <div th:if="${#lists.isEmpty(friends)}" class="text-gray-600">No friends found.</div>
+        </section>
+
+        <!-- Pending Requests -->
+        <!-- Pending Requests Section -->
+        <!-- Pending Requests Section -->
+        <section>
+            <h2 class="text-xl font-semibold text-gray-700 border-b pb-2 mb-4">🕒 Pending Requests</h2>
+
+            <!-- Loop over all friendships that are PENDING -->
+            <div th:each="friendship : ${friends}">
+                <!-- Received Requests (Accept/Reject) -->
+                <div th:if="${friendship.status == 'PENDING' and friendship.direction.name() == 'RECEIVED'}"
+                     class="flex justify-between items-center bg-yellow-100 rounded px-4 py-3 mb-2">
+                    <span class="font-medium text-gray-800" th:text="${friendship.friendUsername}"></span>
+                    <div class="flex gap-2">
+                        <form th:action="@{/friends/accept}" method="post">
+                            <input type="hidden" name="userId" th:value="${userId}" />
+                            <input type="hidden" name="friendshipId" th:value="${friendship.id}" />
+                            <button type="submit" class="bg-green-500 hover:bg-green-600 text-white px-3 py-1 rounded text-sm">
+                                Accept
+                            </button>
+                        </form>
+                        <form th:action="@{/friends/remove}" method="post">
+                            <input type="hidden" name="userId" th:value="${userId}" />
+                            <input type="hidden" name="friendUsername" th:value="${friendship.friendUsername}" />
+                            <button type="submit" class="bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded text-sm">
+                                Reject
+                            </button>
+                        </form>
+                    </div>
+                </div>
+
+                <!-- Sent Requests (Show Sent Label Only) -->
+                <div th:if="${friendship.status == 'PENDING' and friendship.direction.name() == 'SENT'}"
+                     class="flex justify-between items-center bg-blue-100 rounded px-4 py-3 mb-2">
+                    <span class="font-medium text-gray-800" th:text="${friendship.friendUsername}"></span>
+                    <span class="text-sm text-blue-600">Sent</span>
+                </div>
+            </div>
+
+            <!-- Empty State -->
+            <div th:if="${!hasPendingRequests}" class="text-gray-600">
+                No pending requests found.
+            </div>
+
+        </section>
+        <!-- 🎯 Friends Leaderboard -->
+        <section class="mt-10">
+            <h2 class="text-xl font-semibold text-gray-700 border-b pb-2 mb-4">🏆 Friends Leaderboard</h2>
+
+            <div th:if="${#lists.isEmpty(friendLeaderboard)}" class="text-gray-500">
+                No leaderboard data available. Complete some courses to compete!
+            </div>
+
+            <div th:each="friend : ${friendLeaderboard}" class="mb-4 bg-blue-50 rounded-lg shadow px-4 py-3">
+                <div class="flex items-center gap-4">
+                    <!-- Avatar Icon -->
+                    <div class="w-10 h-10 bg-blue-500 rounded-full flex items-center justify-center text-white">
+                        <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                            <path fill-rule="evenodd" d="M10 2a5 5 0 100 10A5 5 0 0010 2zM2 17a8 8 0 0116 0v1H2v-1z" clip-rule="evenodd" />
+                        </svg>
+                    </div>
+
+                    <!-- Friend Info -->
+                    <div class="flex-1">
+                        <div class="flex justify-between items-center">
+                            <span class="font-medium text-gray-800" th:text="${friend.username}">daniel.tan</span>
+                            <span class="font-semibold text-blue-600" th:text="${friend.exp} + ' XP'">230 XP</span>
+                        </div>
+
+                        <!-- XP Progress Bar -->
+                        <div class="w-full bg-gray-300 rounded-full h-2 mt-2">
+                            <div class="h-2 rounded-full bg-gradient-to-r from-yellow-400 to-green-500"
+                                 th:style="'width:' + (${friend.exp} / 300.0 * 100) + '%'"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </div>
+</main>
+
+</body>
+</html>

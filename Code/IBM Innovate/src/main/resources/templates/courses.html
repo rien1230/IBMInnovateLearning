@@ -1,0 +1,652 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Course Catalogue</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <style>
+        /* Add this at the top of your style section */
+        html, body {
+            margin: 0;
+            padding: 0;
+        }
+
+        .grid img {
+            width: 100%; /* Ensures images take full width of their container */
+            height: 200px; /* Fixed height for uniform size */
+            object-fit: cover; /* Crops the image to fit the given dimensions */
+            border-radius: 8px; /* Optional: Rounds the corners */
+        }
+
+        /* ALL styling regarding the review section */
+        .fixed-button {
+            position: fixed;
+            top: 80px;
+            right: 30px;
+            padding: 10px 15px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            text-decoration: none;
+            font-size: 16px;
+            transition: background-color 0.3s;
+        }
+
+        .fixed-button:hover {
+            background-color: #0056b3;
+        }
+
+        /* Smooth scrolling effect */
+        html {
+            scroll-behavior: smooth;
+        }
+
+        /* Target section - the review form section */
+        .review-section {
+            background-color: #fff;
+            padding: 20px;
+            margin-bottom: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        textarea {
+            width: 90%;
+            padding: 10px;
+            margin-top: 10px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+        }
+
+        .star {
+            color: #d1d5db; /* gray-300 */
+            transition: color 0.2s;
+        }
+        .star:hover,
+        .star.active {
+            color: #f59e0b; /* amber-500 */
+        }
+
+        .star-rating input {
+            /* Hide the radio buttons */
+            display: none;}
+
+        .star-rating label {
+            font-size: 30px;
+            color: #ccc;
+            cursor: pointer;
+        }
+
+        .star-rating input:checked ~ label {color: gold;}
+
+        /* Style stars when hovering */
+        .star-rating label:hover {color: #cccccc}
+        .star-rating input:checked ~ label:hover {
+            color: #f1c40f;
+        }
+
+        button {
+            background-color: darkslateblue;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        button:hover {background-color: darkblue;}
+
+        .review-title {
+            color: black;
+            font-size: 24px;
+            font-weight: bold;
+            font-family: "Arial", sans-serif;
+        }
+
+        .reviews-title {
+            color: black;
+            font-size: 24px;
+            font-weight: bold;
+            font-family: "Arial", sans-serif;
+        }
+
+        .review p {margin: 5px 0;}
+
+        .star {
+            font-size: 24px;
+            cursor: pointer;
+            color: gray; /* Default color */
+        }
+
+        .star.gold {
+            color: gold; /* Gold color for selected stars */
+        }
+
+    </style>
+</head>
+<body class="bg-gradient-to-bl from-white via-sky-200 via-sky-400/100 to-blue-500">
+<nav class="bg-none shadow-md">
+    <div class="max-w-6xl mx-auto px-4">
+        <div class="flex justify-between items-center py-4">
+            <a href="/dashboard" class="text-2xl font-bold text-blue-600">IBMinnovate</a>
+            <!-- Hamburger Icon -->
+            <button id="hamburger" class="md:hidden text-gray-700 hover:text-blue-600 focus:outline-none">
+                ☰
+            </button>
+            <!-- Navigation Links -->
+            <div id="navLinks" class="hidden md:flex space-x-4">
+                <a href="/courses" class="text-gray-700 hover:text-blue-600">All Courses</a>
+                <a href="/dashboard" class="text-gray-700 hover:text-blue-600">Dashboard</a>
+                <a href="/profile" class="text-gray-700 hover:text-blue-600">Profile</a>
+                <a href="/logout" id="logoutLink" class="text-gray-700 hover:text-blue-600">Log out</a>
+            </div>
+            <!-- EXP Bar -->
+            <div class="flex items-center space-x-2">
+                <span id="level">1</span>
+                <div class="w-32 h-2 bg-gray-200 rounded-full">
+                    <div id="exp-bar" class="h-full bg-green-500 rounded-full" style="width: 0%;"></div>
+                </div>
+            </div>
+        </div>
+        </div>
+    </div>
+</nav>
+<br>
+<br>
+
+<div class="mb-6">
+    <button id="searchToggle" class="p-2 bg-none text-gray-700 rounded-full shadow-md hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-500 ml-[15px]" aria-label="Toggle search">
+        🔍
+    </button>
+    <div id="searchForm" class="hidden bg-none p-4 shadow-md rounded-md">
+        <form id="searchFilterForm">
+            <div class="flex items-center rounded-md bg-white pl-3 outline-1 -outline-offset-1 outline-gray-300 focus-within:outline-2 focus-within:-outline-offset-2 focus-within:outline-indigo-600">
+                <label for="searchTerm" class="sr-only">Search Term (Course Name): </label>
+                <input type="text" id="searchTerm" name="searchTerm" class="block min-w-0 grow py-1.5 pr-3 pl-1 text-base text-gray-900 caret-blue-700 placeholder:text-gray-400 focus:outline-none sm:text-sm/6 border border-gray-300 rounded-md" placeholder="Enter course name or tags" />
+            </div>
+
+            <label for="duration" class="block mt-4">Duration </label>
+            <input type="text" id="duration" name="duration" class="block min-w-0 grow py-1.5 pr-3 pl-1 text-base text-gray-900 placeholder:text-gray-400 focus:outline-none sm:text-sm/6 border border-gray-300 rounded-md" placeholder="Enter duration" />
+
+            <h3 class="mt-4">Areas of Interest</h3>
+            <div class="flex flex-wrap gap-4 mt-2">
+                <label class="flex items-center space-x-2">
+                    <input type="checkbox" name="tags" value="AI" />
+                    <span>AI</span>
+                </label>
+                <label class="flex items-center space-x-2">
+                    <input type="checkbox" name="tags" value="Cybersecurity" />
+                    <span>Cybersecurity</span>
+                </label>
+                <label class="flex items-center space-x-2">
+                    <input type="checkbox" name="tags" value="Data Science" />
+                    <span>Data Science</span>
+                </label>
+                <label class="flex items-center space-x-2">
+                    <input type="checkbox" name="tags" value="Cloud" />
+                    <span>Cloud</span>
+                </label>
+            </div>
+            <label for="languages">Select a language:</label>
+            <select id="languages" name="languages">
+                <option value="">-- Select a language --</option>
+                <option value="English">English</option>
+                <option value="Spanish">Spanish</option>
+                <option value="French">French</option>
+            </select>
+
+            <button type="submit" class="bg-blue-800 text-white rounded-lg px-4 py-2 mt-4">Search</button>
+        </form>
+    </div>
+</div>
+<br>
+<br>
+<div class="content">
+<div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 mb-2 overscroll-contain">
+    <!-- Introduction to Large Language Models -->
+    <div class="bg-white shadow-md rounded-lg p-6" data-tags="AI" data-name="Introduction to Large Language Models">
+        <img src="LLM.webp" alt="">
+        <h3 class="text-xl font-bold mb-2">Introduction to Large Language Models</h3>
+        <p class="text-gray-600 mb-4">Explore the capabilities of large language models and their business applications.</p>
+        <div class="flex items-center text-sm text-gray-500 mb-4">
+            <span>Duration: 90 minutes</span>
+            <span class="mx-2">•</span>
+            <span>Language: English</span>
+        </div>
+        <button class="bg-blue-800 text-white rounded-lg px-4 py-2" data-course-id="1">
+            <a href="https://skills.yourlearning.ibm.com/activity/MDL-568?ngo-id=0302">Start Learning</a></button>
+        <button class="bg-gray-500 text-white rounded-lg px-4 py-2 ml-2" onclick="showCourseHistory(1)">History</button>
+    </div>
+
+    <!-- Build Your First Chatbot -->
+    <div class="bg-white shadow-md rounded-lg p-6" data-tags="AI" data-name="Build Your First Chatbot">
+        <img src="chatbot.jpg" alt="">
+        <h3 class="text-xl font-bold mb-2">Build Your First Chatbot</h3>
+        <p class="text-gray-600 mb-4">Learn the steps to create conversational chatbots using IBM watsonx™.</p>
+        <div class="flex items-center text-sm text-gray-500 mb-4">
+            <span>Duration: 60 minutes</span>
+            <span class="mx-2">•</span>
+            <span>Language: English</span>
+        </div>
+        <button class="bg-blue-800 text-white rounded-lg px-4 py-2" data-course-id="2">
+            <a href="https://skills.yourlearning.ibm.com/activity/MDL-510?ngo-id=0302">Start Learning</a></button>
+        <button class="bg-gray-500 text-white rounded-lg px-4 py-2 ml-2" onclick="showCourseHistory(2)">History</button>
+    </div>
+
+    <!-- Classifying Data Using IBM Granite -->
+    <div class="bg-white shadow-md rounded-lg p-6" data-tags="AI" data-name="Classifying Data Using IBM Granite" >
+        <img src="Granite.webp" alt="">
+        <h3 class="text-xl font-bold mb-2">Classifying Data Using IBM Granite</h3>
+        <p class="text-gray-600 mb-4">Explore the role of generative AI in simplifying tasks involving classifying data.</p>
+        <div class="flex items-center text-sm text-gray-500 mb-4">
+            <span>Duration: 60 minutes</span>
+            <span class="mx-2">•</span>
+            <span>Language: English</span>
+        </div>
+        <button class="bg-blue-800 text-white rounded-lg px-4 py-2" data-course-id="3">Start Learning</button>
+        <button class="bg-gray-500 text-white rounded-lg px-4 py-2 ml-2" onclick="showCourseHistory(3)">History</button>
+    </div>
+
+    <!-- Explore Text to Speech Using IBM watsonx -->
+    <div class="bg-white shadow-md rounded-lg p-6" data-tags="AI" data-name="Explore Text to Speech Using IBM watsonx">
+        <img src="leadspace.png" alt="">
+        <h3 class="text-xl font-bold mb-2">Explore Text to Speech Using IBM watsonx</h3>
+        <p class="text-gray-600 mb-4">Learn the fundamentals of text-to-speech technology and create AI-powered voice synthesis models.</p>
+        <div class="flex items-center text-sm text-gray-500 mb-4">
+            <span>Duration: 60 minutes</span>
+            <span class="mx-2">•</span>
+            <span>Language: English</span>
+        </div>
+        <button class="bg-blue-800 text-white rounded-lg px-4 py-2" data-course-id="4">Start Learning</button>
+        <button class="bg-gray-500 text-white rounded-lg px-4 py-2 ml-2" onclick="showCourseHistory(4)">History</button>
+    </div>
+
+    <!-- IBM Granite Models for Software Development -->
+    <div class="bg-white shadow-md rounded-lg p-6" data-tags="AI" data-name="IBM Granite Models for Software Development">
+        <img src="granite_models.jpg" alt="">
+        <h3 class="text-xl font-bold mb-2">IBM Granite Models for Software Development</h3>
+        <p class="text-gray-600 mb-4">Discover how generative AI is rewriting the rules of code creation and troubleshooting.</p>
+        <div class="flex items-center text-sm text-gray-500 mb-4">
+            <span>Duration: 60 minutes</span>
+            <span class="mx-2">•</span>
+            <span>Language: English</span>
+        </div>
+        <button class="bg-blue-800 text-white rounded-lg px-4 py-2" data-course-id="5">Start Learning</button>
+        <button class="bg-gray-500 text-white rounded-lg px-4 py-2 ml-2" onclick="showCourseHistory(5)">History</button>
+    </div>
+
+    <!-- Summarizing Data Using IBM Granite -->
+    <div class="bg-white shadow-md rounded-lg p-6" data-tags="AI" data-name="Summarizing Data Using IBM Granite">
+        <img src="summarise_data.png" alt="">
+        <h3 class="text-xl font-bold mb-2">Summarizing Data Using IBM Granite</h3>
+        <p class="text-gray-600 mb-4">Learn how to use IBM Granite models for text-based data summarization.</p>
+        <div class="flex items-center text-sm text-gray-500 mb-4">
+            <span>Duration: 60 minutes</span>
+            <span class="mx-2">•</span>
+            <span>Language: English</span>
+        </div>
+        <button class="bg-blue-800 text-white rounded-lg px-4 py-2" data-course-id="6">Start Learning</button>
+        <button class="bg-gray-500 text-white rounded-lg px-4 py-2 ml-2" onclick="showCourseHistory(6)">History</button>
+    </div>
+
+    <!-- Use Generative AI for Software Development -->
+    <div class="bg-white shadow-md rounded-lg p-6" data-tags="AI" data-name="Use Generative AI for Software Development">
+        <img src="Generative-AI-Revolution-and-Its-Impact-on-Software-Development-Blog.png" alt="">
+        <h3 class="text-xl font-bold mb-2">Use Generative AI for Software Development</h3>
+        <p class="text-gray-600 mb-4">Learn how AI can help write, translate, and fix code using IBM watsonx™.</p>
+        <div class="flex items-center text-sm text-gray-500 mb-4">
+            <span>Duration: 60 minutes</span>
+            <span class="mx-2">•</span>
+            <span>Language: English</span>
+        </div>
+        <button class="bg-blue-800 text-white rounded-lg px-4 py-2" data-course-id="7">Start Learning</button>
+        <button class="bg-gray-500 text-white rounded-lg px-4 py-2 ml-2" onclick="showCourseHistory(7)">History</button>
+    </div>
+
+    <!-- Getting Started with Artificial Intelligence -->
+    <div class="bg-white shadow-md rounded-lg p-6" data-tags="AI" data-name="Getting Started with Artificial Intelligence">
+        <img src="startai.png" alt="">
+        <h3 class="text-xl font-bold mb-2">Getting Started with Artificial Intelligence</h3>
+        <p class="text-gray-600 mb-4">Gain a foundational understanding of AI concepts and applications.</p>
+        <div class="flex items-center text-sm text-gray-500 mb-4">
+            <span>Duration: 3 hours</span>
+            <span class="mx-2">•</span>
+            <span>Language: English</span>
+        </div>
+        <button class="bg-blue-800 text-white rounded-lg px-4 py-2" data-course-id="8">Start Learning</button>
+        <button class="bg-gray-500 text-white rounded-lg px-4 py-2 ml-2" onclick="showCourseHistory(8)">History</button>
+    </div>
+
+    <!-- Artificial Intelligence Fundamentals -->
+    <div class="bg-white shadow-md rounded-lg p-6" data-tags="AI" data-name="Artificial Intelligence Fundamentals">
+        <img src="AI_fundamentals.webp" alt="">
+        <h3 class="text-xl font-bold mb-2">Artificial Intelligence Fundamentals</h3>
+        <p class="text-gray-600 mb-4">Learn about AI concepts, ethics, and applications in various industries.</p>
+        <div class="flex items-center text-sm text-gray-500 mb-4">
+            <span>Duration: 10+ hours</span>
+            <span class="mx-2">•</span>
+            <span>Languages: English, Portuguese, Chinese, French, Hindi, Spanish, Japanese</span>
+        </div>
+        <button class="bg-blue-800 text-white rounded-lg px-4 py-2" data-course-id="9">Start Learning</button>
+        <button class="bg-gray-500 text-white rounded-lg px-4 py-2 ml-2" onclick="showCourseHistory(9)">History</button>
+    </div>
+
+    <!-- Building AI Solutions Using Advanced Algorithms and Open Source Frameworks -->
+    <div class="bg-white shadow-md rounded-lg p-6" data-tags="AI" data-name="Building AI Solutions Using Advanced Algorithms and Open Source Frameworks">
+        <img src="texttospeech.png" alt="">
+        <h3 class="text-xl font-bold mb-2">Building AI Solutions Using Advanced Algorithms</h3>
+        <p class="text-gray-600 mb-4">Learn to build AI solutions with open-source frameworks like TensorFlow and Keras.</p>
+        <div class="flex items-center text-sm text-gray-500 mb-4">
+            <span>Duration: 20+ hours</span>
+            <span class="mx-2">•</span>
+            <span>Language: English</span>
+        </div>
+        <button class="bg-blue-800 text-white rounded-lg px-4 py-2" data-course-id="10">Start Learning</button>
+        <button class="bg-gray-500 text-white rounded-lg px-4 py-2 ml-2" onclick="showCourseHistory(10)">History</button>
+    </div>
+
+    <!-- Building Trustworthy AI Enterprise Solutions -->
+    <div class="bg-white shadow-md rounded-lg p-6" data-tags="AI" data-name="Building Trustworthy AI Enterprise Solutions">
+        <img src="ai_enterprise.png" alt="">
+        <h3 class="text-xl font-bold mb-2">Building Trustworthy AI Enterprise Solutions</h3>
+        <p class="text-gray-600 mb-4">Explore ethical AI adoption and its applications in business.</p>
+        <div class="flex items-center text-sm text-gray-500 mb-4">
+            <span>Duration: 10+ hours</span>
+            <span class="mx-2">•</span>
+            <span>Language: English</span>
+        </div>
+        <button class="bg-blue-800 text-white rounded-lg px-4 py-2 " data-course-id="11">Start Learning</button>
+        <button class="bg-gray-500 text-white rounded-lg px-4 py-2 ml-2" onclick="showCourseHistory(11)">History</button>
+    </div>
+
+    <!-- Code Generation and Optimization Using IBM Granite -->
+    <div class="bg-white shadow-md rounded-lg p-6" data-tags="AI" data-name="Code Generation and Optimization Using IBM Granite">
+        <img src="code_generation.webp" alt="">
+        <h3 class="text-xl font-bold mb-2">Code Generation and Optimization Using IBM Granite</h3>
+        <p class="text-gray-600 mb-4">Learn to generate and optimize code using IBM Granite models.</p>
+        <div class="flex items-center text-sm text-gray-500 mb-4">
+            <span>Duration: 210 minutes</span>
+            <span class="mx-2">•</span>
+            <span>Language: English</span>
+        </div>
+        <button class="bg-blue-800 text-white rounded-lg px-4 py-2" data-course-id="12">Start Learning</button>
+        <button class="bg-gray-500 text-white rounded-lg px-4 py-2 ml-2" onclick="showCourseHistory(12)">History</button>
+    </div>
+
+    <!-- Data Classification and Summarization Using IBM Granite -->
+    <div class="bg-white shadow-md rounded-lg p-6" data-tags="AI" data-name="Data Classification and Summarization Using IBM Granite">
+        <img src="data_classIBM.webp" alt="">
+        <h3 class="text-xl font-bold mb-2">Data Classification and Summarization Using IBM Granite</h3>
+        <p class="text-gray-600 mb-4">Learn to classify and summarize data using IBM Granite models.</p>
+        <div class="flex items-center text-sm text-gray-500 mb-4">
+            <span>Duration: 180-240 minutes</span>
+            <span class="mx-2">•</span>
+            <span>Language: English</span>
+        </div>
+        <button class="bg-blue-800 text-white rounded-lg px-4 py-2" data-course-id="13">Start Learning</button>
+        <button class="bg-gray-500 text-white rounded-lg px-4 py-2 ml-2" onclick="showCourseHistory(13)">History</button>
+    </div>
+
+    <!-- Generative AI in Action -->
+    <div class="bg-white shadow-md rounded-lg p-6" data-tags="AI" data-name="Generative AI in Action">
+        <img src="generative_action.jpg" alt="">
+        <h3 class="text-xl font-bold mb-2">Generative AI in Action</h3>
+        <p class="text-gray-600 mb-4">Apply generative AI principles and prompt engineering techniques.</p>
+        <div class="flex items-center text-sm text-gray-500 mb-4">
+            <span>Duration: 5+ hours</span>
+            <span class="mx-2">•</span>
+            <span>Language: English</span>
+        </div>
+        <button class="bg-blue-800 text-white rounded-lg px-4 py-2" data-course-id="14">Start Learning</button>
+        <button class="bg-gray-500 text-white rounded-lg px-4 py-2 ml-2" onclick="showCourseHistory(14)">History</button>
+    </div>
+
+    <!-- Getting Started with Cybersecurity -->
+    <div class="bg-white shadow-md rounded-lg p-6" data-tags="Cybersecurity" data-name="Getting Started with Cybersecurity">
+        <img src="get-started.jpg" alt="">
+        <h3 class="text-xl font-bold mb-2">Getting Started with Cybersecurity</h3>
+        <p class="text-gray-600 mb-4">Learn the basics of cybersecurity and its importance in protecting data.</p>
+        <div class="flex items-center text-sm text-gray-500 mb-4">
+            <span>Duration: 3 hours</span>
+            <span class="mx-2">•</span>
+            <span>Language: English</span>
+        </div>
+        <button class="bg-blue-800 text-white rounded-lg px-4 py-2" data-course-id="15">Start Learning</button>
+        <button class="bg-gray-500 text-white rounded-lg px-4 py-2 ml-2" onclick="showCourseHistory(15)">History</button>>
+    </div>
+
+    <!-- Cybersecurity Fundamentals -->
+    <div class="bg-white shadow-md rounded-lg p-6" data-tags="Cybersecurity" data-name="Cybersecurity Fundamentals">
+        <img src="Blog_Cybersecurity-Fundamentals.png" alt="">
+        <h3 class="text-xl font-bold mb-2">Cybersecurity Fundamentals</h3>
+        <p class="text-gray-600 mb-4">Understand cybersecurity concepts, threats, and risk management strategies.</p>
+        <div class="flex items-center text-sm text-gray-500 mb-4">
+            <span>Duration: 7.5 hours</span>
+            <span class="mx-2">•</span>
+            <span>Language: English</span>
+        </div>
+        <button class="bg-blue-800 text-white rounded-lg px-4 py-2" data-course-id="16">Start Learning</button>
+        <button class="bg-gray-500 text-white rounded-lg px-4 py-2 ml-2" onclick="showCourseHistory(16)">History</button>
+    </div>
+
+    <!-- Enterprise Security in Practice -->
+    <div class="bg-white shadow-md rounded-lg p-6" data-tags="Cybersecurity" data-name="Enterprise Security in Practice">
+        <img src="enterprise_security.png" alt="">
+        <h3 class="text-xl font-bold mb-2">Enterprise Security in Practice</h3>
+        <p class="text-gray-600 mb-4">Learn to elevate an organization's security posture with advanced practices.</p>
+        <div class="flex items-center text-sm text-gray-500 mb-4">
+            <span>Duration: 10+ hours</span>
+            <span class="mx-2">•</span>
+            <span>Language: English</span>
+        </div>
+        <button class="bg-blue-800 text-white rounded-lg px-4 py-2" data-course-id="17">Start Learning</button>
+        <button class="bg-gray-500 text-white rounded-lg px-4 py-2 ml-2" onclick="showCourseHistory(17)">History</button>
+    </div>
+
+    <!-- Getting Started with Threat Intelligence and Hunting -->
+    <div class="bg-white shadow-md rounded-lg p-6" data-tags="Cybersecurity" data-name="Getting Started with Threat Intelligence and Hunting">
+        <img src="Threat_Intelligence.png" alt="">
+        <h3 class="text-xl font-bold mb-2">Getting Started with Threat Intelligence and Hunting</h3>
+        <p class="text-gray-600 mb-4">Learn the basics of threat intelligence and cyber threat hunting.</p>
+        <div class="flex items-center text-sm text-gray-500 mb-4">
+            <span>Duration: 5 hours</span>
+            <span class="mx-2">•</span>
+            <span>Language: English</span>
+        </div>
+        <button class="bg-blue-800 text-white rounded-lg px-4 py-2" data-course-id="18">Start Learning</button>
+        <button class="bg-gray-500 text-white rounded-lg px-4 py-2 ml-2" onclick="showCourseHistory(18)">History</button>
+    </div>
+
+    <!-- Security Operations Center in Practice -->
+    <div class="bg-white shadow-md rounded-lg p-6" data-tags="Cybersecurity" data-name="Security Operations Center in Practice">
+        <img src="SOC.png" alt="">
+        <h3 class="text-xl font-bold mb-2">Security Operations Center in Practice</h3>
+        <p class="text-gray-600 mb-4">Learn the foundations of establishing and managing a Security Operations Center (SOC).</p>
+        <div class="flex items-center text-sm text-gray-500 mb-4">
+            <span>Duration: 20+ hours</span>
+            <span class="mx-2">•</span>
+            <span>Languages: English, Spanish, Portuguese</span>
+        </div>
+        <button class="bg-blue-800 text-white rounded-lg px-4 py-2" data-course-id="19">Start Learning</button>
+        <button class="bg-gray-500 text-white rounded-lg px-4 py-2 ml-2" onclick="showCourseHistory(19)">History</button>
+    </div>
+
+    <!-- Getting Started with Data -->
+    <div class="bg-white shadow-md rounded-lg p-6" data-tags="Data Science" data-name="Getting Started with Data">
+        <img src="startdata.webp" alt="">
+        <h3 class="text-xl font-bold mb-2">Getting Started with Data</h3>
+        <p class="text-gray-600 mb-4">Learn the basics of data concepts, analytics, and visualization.</p>
+        <div class="flex items-center text-sm text-gray-500 mb-4">
+            <span>Duration: 3 hours</span>
+            <span class="mx-2">•</span>
+            <span>Language: English</span>
+        </div>
+        <button class="bg-blue-800 text-white rounded-lg px-4 py-2" data-course-id="20">Start Learning</button>
+        <button class="bg-gray-500 text-white rounded-lg px-4 py-2 ml-2" onclick="showCourseHistory(20)">History</button>
+    </div>
+
+    <!-- Data Fundamentals -->
+    <div class="bg-white shadow-md rounded-lg p-6" data-tags="Data Science" data-name="Data Fundamentals">
+        <img src="azure-data-fundamentals-explore-core-data-concepts-social.png" alt="">
+        <h3 class="text-xl font-bold mb-2">Data Fundamentals</h3>
+        <p class="text-gray-600 mb-4">Understand data analytics concepts and tools used in the data ecosystem.</p>
+        <div class="flex items-center text-sm text-gray-500 mb-4">
+            <span>Duration: 7 hours</span>
+            <span class="mx-2">•</span>
+            <span>Languages: English, French</span>
+        </div>
+        <button class="bg-blue-800 text-white rounded-lg px-4 py-2" data-course-id="21">Start Learning</button>
+        <button class="bg-gray-500 text-white rounded-lg px-4 py-2 ml-2" onclick="showCourseHistory(21)">History</button>
+    </div>
+
+    <!-- Enterprise Data Science in Practice -->
+    <div class="bg-white shadow-md rounded-lg p-6" data-tags="Data Science" data-name="Enterprise Data Science in Practice">
+        <img src="data_enterprise.png" alt="">
+        <h3 class="text-xl font-bold mb-2">Enterprise Data Science in Practice</h3>
+        <p class="text-gray-600 mb-4">Learn to apply data science methodologies to real-world enterprise challenges.</p>
+        <div class="flex items-center text-sm text-gray-500 mb-4">
+            <span>Duration: 10+ hours</span>
+            <span class="mx-2">•</span>
+            <span>Language: English</span>
+        </div>
+        <button class="bg-blue-800 text-white rounded-lg px-4 py-2" data-course-id="22">Start Learning</button>
+        <button class="bg-gray-500 text-white rounded-lg px-4 py-2 ml-2" onclick="showCourseHistory(22)">History</button>
+    </div>
+
+    <!-- Machine Learning for Data Science Projects -->
+    <div class="bg-white shadow-md rounded-lg p-6" data-tags="Data Science" data-name="Machine Learning for Data Science Projects">
+        <img src="dataprojects.jpg" alt="">
+        <h3 class="text-xl font-bold mb-2">Machine Learning for Data Science Projects</h3>
+        <p class="text-gray-600 mb-4">Learn advanced data modeling and machine learning techniques.</p>
+        <div class="flex items-center text-sm text-gray-500 mb-4">
+            <span>Duration: 20+ hours</span>
+            <span class="mx-2">•</span>
+            <span>Languages: English, Spanish, Portuguese</span>
+        </div>
+        <button class="bg-blue-800 text-white rounded-lg px-4 py-2" data-course-id="23">Start Learning</button>
+        <button class="bg-gray-500 text-white rounded-lg px-4 py-2 ml-2" onclick="showCourseHistory(23)">History</button>
+    </div>
+
+    <!-- Cloud Computing Fundamentals -->
+    <div class="bg-white shadow-md rounded-lg p-6" data-tags="Cloud" data-name="Cloud Computing Fundamentals">
+        <img src="Cloud-Computing-History-1.png">
+        <h3 class="text-xl font-bold mb-2">Cloud Computing Fundamentals</h3>
+        <p class="text-gray-600 mb-4">Learn the basics of cloud computing, including services, deployment models, and security.</p>
+        <div class="flex items-center text-sm text-gray-500 mb-4">
+            <span>Duration: 10+ hours</span>
+            <span class="mx-2">•</span>
+            <span>Language: English</span>
+        </div>
+        <button class="bg-blue-800 text-white rounded-lg px-4 py-2" data-course-id="24">Start Learning</button>
+        <button class="bg-gray-500 text-white rounded-lg px-4 py-2 ml-2" onclick="showCourseHistory(24)">History</button>
+        (24)">➕</button>
+         onclick="toggleFavourite(24)">⭐</button>
+    </div>
+
+    <!-- Journey to Cloud: Envisioning Your Solution -->
+    <div class="bg-white shadow-md rounded-lg p-6" data-tags="Cloud" data-name="Journey to Cloud: Envisioning Your Solution">
+        <img src="Journey-to-Cloud.png.webp" alt="">
+        <h3 class="text-xl font-bold mb-2">Journey to Cloud: Envisioning Your Solution</h3>
+        <p class="text-gray-600 mb-4">Learn about cloud technologies and digital transformation strategies.</p>
+        <div class="flex items-center text-sm text-gray-500 mb-4">
+            <span>Duration: 5 hours</span>
+            <span class="mx-2">•</span>
+            <span>Language: English</span>
+        </div>
+        <button class="bg-blue-800 text-white rounded-lg px-4 py-2" data-course-id="25">Start Learning</button>
+        <button class="bg-gray-500 text-white rounded-lg px-4 py-2 ml-2" onclick="showCourseHistory(25)">History</button>
+    </div>
+</div>
+</div>
+<!-- code for the review section of the page -->
+<div class="px-4 max-w-7xl mx-auto" >
+    <a id="scroll-button" href="#reviewSection" class="fixed-button">Leave a Review</a>
+    <!-- Review Form -->
+
+    <div id="reviewSection" class="bg-white p-6 rounded-lg shadow-md mb-8">
+
+        <form id="reviewFormSubmit">
+            <p class="reviews-title rounded-md">Write a review</p><br>
+            <label for="courseNumber"><strong>Choose a course:</strong></label>
+            <select id="courseNumber">
+                <option value="23">Introduction to Large Language Models</option>
+                <option value="24">Build your First Chatbot</option>
+                <option value="25">Classifying Data using IBM Granite</option>
+                <option value="26">Explore Text to Speech using IBM watsonx</option>
+                <option value="27">IBM Granite Models for Software Development</option>
+                <option value="28">Summarizing Data Using IBM Granite</option>
+                <option value="29">Use Generative AI for Software Development</option>
+                <option value="30">Getting Started with Artificial Intelligence</option>
+                <option value="31">Artificial Intelligence Fundamentals</option>
+                <option value="32">Building AI Solutions Using Advanced Algorithms</option>
+                <option value="33">Building Trustworthy AI Enterprise Solutions</option>
+                <option value="34">Data Classification and Summarization Using IBM Granite</option>
+                <option value="35">Generative AI in Action</option>
+                <option value="36">Getting Started with Cybersecurity</option>
+                <option value="37">Cybersecurity Fundamentals</option>
+                <option value="38">Enterprise Security in Practice</option>
+                <option value="39">Getting Started with Threat Intelligence and Hunting</option>
+                <option value="40">Security Operations Center in Practice</option>
+                <option value="41">Getting Started with Data</option>
+                <option value="42">Data Fundamentals</option>
+                <option value="43">Enterprise Data Science in Practice</option>
+                <option value="44">Machine Learning for Data Science Projects</option>
+                <option value="45">Cloud Computing Fundamentals</option>
+                <option value="46">Journey to Cloud: Envisioning Your Solution</option>
+                <!-- Add all your courses here -->
+            </select>
+            <br><br>
+
+            <label for="review"><strong>Write your review:</strong></label>
+            <textarea id="review" required></textarea>
+            <br><br>
+            <!-- Rating Section -->
+            <div id="rating">
+                <span class="star" data-value="1">&#9733;</span>
+                <span class="star" data-value="2">&#9733;</span>
+                <span class="star" data-value="3">&#9733;</span>
+                <span class="star" data-value="4">&#9733;</span>
+                <span class="star" data-value="5">&#9733;</span>
+            </div>
+
+            <button type="submit">Submit Review</button>
+        </form>
+    </div>
+    <div id="reviewsSection" class="bg-white p-6 rounded-lg shadow-md">
+        <p class="reviews-title">Reviews</p>
+        <ul>
+            <!-- Reviews will be dynamically inserted here -->
+        </ul>
+    </div>
+</div>
+
+<script src="/review.js"></script>
+<script src="/courses.js"></script>
+
+<!-- script for the scroll button -->
+<script>
+    const button = document.getElementById("scroll-button");
+    const targetSection = document.getElementById("reviewSection");
+
+    window.addEventListener("scroll", () => {
+        // Get the position of the target section
+        const targetPosition = targetSection.getBoundingClientRect().top;
+        const windowHeight = window.innerHeight;
+
+        // If the section is visible, change button to "Go Up"
+        if (targetPosition < windowHeight / 2) {
+            button.innerText = "Go Up";
+            button.href = "#";
+        } else {
+            button.innerText = "Leave a Review";
+            button.href = "#reviewSection";
+        }
+    });
+</script>
+
+
+</body>
+</html>

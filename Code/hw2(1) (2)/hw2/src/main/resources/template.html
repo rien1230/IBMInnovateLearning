@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Homework 2: Tasks for $username</title>
+</head>
+
+<body>
+<h1>Homework 2: Tasks for $username</h1>
+
+<p>$intro</p>
+
+<h2>Task 1: Configuration [12 marks]</h2>
+<ol>
+    <li>Add all the necessary dependencies for connecting to a MySQL database and showing JSPs. [7 marks]</li>
+    <li>Configure the application to use a MySQL database (username, password, etc.) and to print SQL statements on the console. [5 marks]</li>
+</ol>
+
+<h2>Task 2: Domain Classes [15 marks]</h2>
+<p>Create class <code>co2123.hw2.model.$Parent</code>. With the following private fields:
+<ol>
+    <li><code>int $pf1</code></li>
+    <li><code>String $pf2</code></li>
+    <li><code>List &lt$Child&gt $children</code></li>
+    <li><code>$Child $pf4</code></li>
+</ol>
+Generate necessary getters and setters. [3 marks]
+</p>
+<p>Create class <code>co2123.hw2.model.$Child</code>. With the following private fields:
+<ul>
+    <li><code>String $cf1</code></li>
+    <li><code>List &lt$Parent&gt $parents</code></li>
+    <li><code>List &lt$Grandchild&gt $grandchildren</code></li>
+    <li><code>$Grandchild $cf4</code></li>
+</ul>
+Generate necessary getters and setters. [3 marks]
+</p>
+<p>Create class <code>co2123.hw2.model.$Grandchild</code>. With the following private fields:
+<ol>
+    <li><code>int $gf1</code></li>
+    <li><code>int $gf2</code></li>
+</ol>
+Generate necessary getters and setters. [3 marks]
+</p>
+<p>Generate toString() methods for: [6 marks]
+<ul>
+    <li>$Grandchild which prints out the <code>$gf1</code> and <code>$gf2</code> of this class.</li>
+    <li>$Child which prints out the <code>$cf1</code>, <code>$grandchildren</code>, and <code>$cf4</code> of this class.</li>
+    <li>$Parent which prints out the <code>$pf1</code>, <code>$pf2</code>, <code>$children</code>, and <code>$pf4</code> of this class.</li>
+</ul>
+</p>
+<p>To format your toString(), integers should be displayed as $pf1=X and Strings as $cf1='X'. You can check your formatting using Task2Test.java. IntelliJ IDEA's in-built toString() generator should follow this format too. </p><p>NOTE: You must have created /list$Parent, /list$Child, and /list$Grandchild from Task 5 as well as have at least one of each object stored in your database for the toString() tests to work.</p>
+
+<h2>Task 3: JPA Annotations [25 marks]</h2>
+<p>Annotate the classes in <code>co2123.hw2.model</code> based on these statements:
+<ul>
+    <li>Add the appropriate annotations so <code>$Parent</code>, <code>$Child</code>, and <code>$Grandchild</code> become tables in your database. [3 marks]</li>
+    <ul>
+        <li>Their primary keys should be <code>$pf1</code>, <code>$cf1</code>, and <code>$gf1</code> respectively. [3 marks]</li>
+        <li>The primary keys of <code>$Parent</code> and <code>$Grandchild</code> should be generated automatically. [2 marks]</li>
+    </ul>
+    <li>A <code>$parent</code> can have many <code>$children</code> and a <code>$child</code> can belong to many <code>$parents</code>. The relationship between them is bidirectional. Use mappedBy to indicate this. [2 marks]</li>
+    <li>A <code>$child</code> can have multiple <code>$grandchildren</code> but one <code>$grandchild</code> can only belong to one <code>$child</code>. Use a join column as well as another annotation to indicate this. [2 marks]</li>
+    <li>A <code>$child</code> can have only one <code>$cf4</code> which belongs to one <code>$child</code>. [2 marks]</li>
+    <li>Many <code>$children</code> may have one <code>$pf4</code>. This <code>$pf4</code> can belong to multiple <code>$children</code>. [2 marks]</li>
+    <li>If you save a <code>$parent</code>, the <code>$children</code> in the list of <code>$children</code> should be saved too. [2 marks]</li>
+    <li>If a <code>$child</code> is deleted, all its <code>$grandchildren</code> should be deleted too. [2 marks].</li>
+    <li>If a <code>$child</code> is loaded, all its <code>$grandchildren</code> should be loaded too. [2 marks]</li>
+</ul>
+</p>
+<p>Please <strong>do not</strong> manually override the column names by using, for example, (name="NewName") on a @JoinColumn annotation.</p>
+<p>Create CRUD repositories for each of your model classes inside the package <code>co2123.hw2.repo</code> called <code>$ParentRepository</code>, <code>$ChildRepository</code>, and <code>$GrandchildRepository</code>. [3 marks]</p>
+
+<h2>Task 4: CRUD Repository Methods [20 marks]</h2>
+<p>
+<ul>
+    <li>Add a method in <code>$ParentRepository</code> which finds the <code>$parents</code> by <code>$pf2</code>. [5 marks]</li>
+    <li>Add a method in <code>$ParentRepository</code> which finds the <code>$parents</code> by the <code>$cf1</code> of their <code>$pf4</code>. [5 marks]</li>
+    <li>Add a method in <code>$ChildRepository</code> which finds the <code>$children</code> by <code>$cf1</code>. [5 marks]</li>
+    <li>Add a method in <code>$GrandchildRepository</code> which finds the <code>$grandchildren</code> by <code>$gf2</code>. [5 marks]</li>
+</ul>
+</p>
+<p>All CRUD repository methods <strong>must</strong> start with findBy (and not findAllBy, findOneBy, find$ParentsBy etc.)</p>
+
+<h2>Task 5: Displaying Data (Model, View, and Controller) [28 marks]</h2>
+<p>
+<ul>
+    <li>In <code>co2123.hw2.HW2Application</code>, create and store at one instance of every class from <code>co2123.hw2.model</code>. [9 marks]</li>
+    <ul>
+        <li>You will need to use the repositories you have created.</li>
+        <li>You must use implement CommandLineRunner and override its run method in order to create these instances.</li>
+        <li>The database should contain one row on each of the tables with no null or empty records.</li>
+    </ul>
+    <li>Create the controller <code>co2123.hw2.controller.ListController</code> which has three methods: /list$Parent, /list$Child, and /list$Grandchild [5 marks]</li>
+    <ul>
+        <li>They all return the JSP <code>/src/main/webapp/WEB-INF/views/list.jsp</code> </li>
+        <li>Each method should list all objects (their toString() representations) from the database on the JSP. For example, /list$Parent lists all the $parents in the database, /list$Child lists all the $children, and /list$Grandchild lists all the $grandchildren. [4 marks]</li>
+        <li>The model attribute in each method which contains the list of $parents/$children/$grandchildren should be called <code>data</code>.</li>
+        <li>Use a forEach loop on <code>list.jsp</code> to display the data.</li>
+    </ul>
+    <li>Create the controller <code>co2123.hw2.controller.DeleteController</code> [1 mark]</li>
+    <li>For each class in package <code>co2123.hw2.model</code>, add a controller method to delete an instance from the database and redirect to the URL <code>http://localhost:8080/</code></li>
+    <ul>
+        <li>For class <code>$Parent</code>, the request http://localhost:8080/delete$Parent?$pf1=5 should delete the $parent with the primary key $pf1 from the database. [3 marks]</li>
+        <li>For class <code>$Child</code>, the request http://localhost:8080/delete$Child?$cf1=Example should delete the $child with the primary key $cf1 from the database. [3 marks]</li>
+        <ul>
+            <li>HINT: You must delete all references to this $child in the $parent.</li>
+        </ul>
+        <li>For class <code>$Grandchild</code>, the request http://localhost:8080/delete$Grandchild?$gf1=2 should delete the $grandchild with the primary key $gf1 from the database. [3 marks]</li>
+    </ul>
+</ul>
+</p>
+</body>
+</html>

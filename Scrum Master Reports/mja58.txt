@@ -1,0 +1,16 @@
+Week 5 (Mar 23 – Mar 26) 
+	•	Meeting 17 – March 23rd
+	•	Met with the team to finalize all remaining aspects of the Sprint 2 submission.
+	•	Created a clear list of final tasks, including:
+	•	Testing and reviewing all user stories for completion and accuracy
+	•	Cleaning up the Git repository (removing unused branches, fixing commit messages, organizing files)
+	•	Completing and proofreading all required documentation
+	•	Planning a time slot for recording the Sprint 2 demo video
+	•	Collaboratively resolved several outstanding coding issues and minor bugs in the project.
+	•	Ensured that all functionalities were working smoothly in preparation for the final demo.
+	•	Meeting 18 – March 24th
+	•	Met specifically to record the Sprint 2 demo presentation as a group.
+	•	Carried out a test run of the demo to ensure smooth delivery and screen transitions.
+	•	Assigned speaking parts and practiced timing and content for each section.
+	•	Made small refinements to the user interface for better visual presentation during the demo.
+	•	Recorded and reviewed the final demo video before submission to ensure clarity and quality.

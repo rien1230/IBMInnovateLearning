@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profile</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/@material-tailwind/html@latest/scripts/script-name.js"></script>
+    <!--Load the tippy js -->
+    <script src="https://unpkg.com/@popperjs/core@2"></script>
+    <script src="https://unpkg.com/tippy.js@6"></script>
+    <!-- Load Three.js first -->
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/build/three.min.js"></script>
+    <!-- Load GLTFLoader (optional, but required for .glb files) -->
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/GLTFLoader.js"></script>
+    <script>
+        // Initialize Tippy for all elements with [data-tooltip]
+        document.addEventListener('DOMContentLoaded', () => {
+            tippy('[data-tooltip]', {
+                content(reference) {
+                    return reference.getAttribute('data-tooltip');
+                },
+                placement: 'top',
+                theme: 'material', // Match your design
+                arrow: true,
+            });
+        });
+    </script>
+    <!-- Load your script last -->
+    <script src="profile.js"></script>
+    <style>
+        .avatar-section {
+            background: linear-gradient(to bottom, white, skyblue, blue, navy);
+            background-position: center;
+            background-size: cover;
+            position: relative;
+            width: 40%;
+        }
+
+        .content {
+            margin-left: 270px;
+            padding: 20px;
+        }
+
+        .disabled {
+            cursor: not-allowed;
+            opacity: 0.5;
+        }
+
+        .disabled:hover {
+            background-color: inherit !important;
+            color: inherit !important;
+        }
+
+        .sidebar {
+            background-color: #f8f9fa;
+            height: calc(100vh - 80px);
+            left: 0;
+            padding: 20px;
+            position: fixed;
+            top: 80px;
+            width: 250px;
+        }
+
+        .sidebar a {
+            border-radius: 5px;
+            color: #333;
+            display: block;
+            margin-bottom: 5px;
+            padding: 10px;
+            text-decoration: none;
+        }
+
+        .sidebar a:hover {
+            background-color: #e9ecef;
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+
+        [data-tooltip] {
+            position: relative;
+        }
+
+    </style>
+</head>
+<body class="bg-gradient-to-bl from-white via-sky-200 via-sky-400/100 to-blue-500">
+<nav class="bg-white shadow-md">
+    <div class="max-w-6xl mx-auto px-4">
+        <div class="flex justify-between items-center py-4">
+            <!-- Back Button -->
+            <a href="/dashboard" class="text-2xl font-bold text-blue-600">← Back</a>
+            <a href="/dashboard" class="text-2xl font-bold text-blue-600">IBMinnovate</a>
+            <div class="flex space-x-4">
+                <a href="/courses" class="text-gray-700 hover:text-blue-600">All Courses</a>
+                <a href="/dashboard" class="text-gray-700 hover:text-blue-600">Dashboard</a>
+                <a href="/profile" class="text-gray-700 hover:text-blue-600">Profile</a>
+                <a href="/logout" id="logoutLink" class="text-gray-700 hover:text-blue-600">Log out</a>
+            </div>
+        </div>
+    </div>
+</nav>
+
+<!-- Sidebar -->
+<div class="sidebar">
+    <button onclick="loadContent('profile')" class="w-full text-left p-2 text-gray-700 hover:bg-gray-200 hover:text-blue-600 rounded transition duration-300">
+        Profile
+    </button>
+    <button onclick="loadContent('manage-profile')" class="w-full text-left p-2 text-gray-700 hover:bg-gray-200 hover:text-blue-600 rounded transition duration-300">
+        Manage Profile
+    </button>
+    <button onclick="loadContent('avatar')" class="w-full text-left p-2 text-gray-700 hover:bg-gray-200 hover:text-blue-600 rounded transition duration-300">
+        Avatar
+    </button>
+    <button onclick="loadContent('badges')" class="w-full text-left p-2 text-gray-700 hover:bg-gray-200 hover:text-blue-600 rounded transition duration-300">
+        Badges
+    </button>
+</div>
+
+<!-- Main Content -->
+<div class="content">
+    <!-- Profile Content -->
+    <div id="profile-content" class="tab-content active">
+        <div class="max-w-4xl mx-auto mt-10 p-6 bg-white rounded-lg shadow-md">
+            <div class="flex">
+                <div class="flex-1">
+                    <div class="mb-6">
+                        <div class="flex items-center space-x-4">
+                            <div class="w-16 h-16 bg-gray-200 rounded-full flex items-center justify-center overflow-hidden relative" onclick="document.getElementById('profile-image-upload').click()">
+                                <img id="profile-image" src="fallback-image.png" alt="Profile Image" class="w-full h-full object-cover">
+                                <input
+                                        type="file"
+                                        id="profile-image-upload"
+                                        accept=".png, image/png"
+                                        class="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+                                        onchange="handleImageUpload(event)"
+                                />
+                                <div class="absolute inset-0 flex items-center justify-center bg-black bg-opacity-50 opacity-0 hover:opacity-100 transition-opacity">
+                                    <span class="text-white text-sm font-semibold">Upload</span>
+                                </div>
+                            </div>
+                            <div>
+                                <h2 class="text-2xl font-semibold text-gray-800" id="usernameDisplay"></h2>
+                                <p class="text-gray-600">User ID: <span id="userIdDisplay"></span></p>
+                            </div>
+                        </div>
+                        <div class="mt-4 text-white">
+                            <h3 class="text-lg font-bold">Experience</h3>
+                            <div class="relative w-full h-4 bg-gray-300 rounded-full overflow-hidden mt-2">
+                                <div id="avatar-exp-bar" class="h-full bg-blue-500 transition-all duration-300" style="width: 0%;"></div>
+                            </div>
+                            <p class="mt-1 text-sm">Level <span id="avatar-level">1</span> | <span id="avatar-exp">0/120</span> XP</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="avatar-section" class="avatar-section">
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Manage Profile Content -->
+    <div id="manage-profile-content" class="tab-content">
+        <div class="max-w-4xl mx-auto mt-10 p-6 bg-white rounded-lg shadow-md">
+            <h2 class="text-2xl font-semibold text-gray-800">Manage Profile</h2>
+            <!-- Content will be dynamically loaded here -->
+            <div id="manage-profile-dynamic-content"></div>
+        </div>
+    </div>
+
+    <!-- Avatar Content -->
+    <div id="avatar-content" class="tab-content">
+        <div class="w-full">
+            <div class="relative right-0">
+                <!-- Tab Navigation -->
+                <ul class="relative flex flex-wrap px-1.5 py-1.5 list-none rounded-md bg-slate-100" data-tabs="tabs" role="list">
+                    <li class="z-30 flex-auto text-center">
+                        <a class="z-30 flex items-center justify-center w-full px-0 py-2 text-sm mb-0 transition-all ease-in-out border-0 rounded-md cursor-pointer text-slate-600 bg-inherit hover:bg-gray-400 hover:text-blue-700"
+                           data-tab-target="#beginner-tab" role="tab" aria-selected="true" aria-controls="beginner-tab">
+                            Beginner
+                        </a>
+                    </li>
+                    <li class="z-30 flex-auto text-center">
+                        <a id="intermediate-tab-button"
+                           class="z-30 flex items-center justify-center w-full px-0 py-2 text-sm mb-0 transition-all ease-in-out border-0 rounded-md cursor-pointer text-slate-600 bg-inherit hover:bg-gray-400 hover:text-blue-700"
+                           data-tab-target="#intermediate-tab"
+                           role="tab"
+                           aria-controls="intermediate-tab"
+                           data-tooltip="Unlock at 50 EXP">
+                            Intermediate
+                        </a>
+                    </li>
+                    <li class="z-30 flex-auto text-center">
+                        <a id="pro-tab-button"
+                           class="z-30 flex items-center justify-center w-full px-0 py-2 text-sm mb-0 transition-all ease-in-out border-0 rounded-md cursor-pointer text-slate-600 bg-inherit hover:bg-gray-400 hover:text-blue-700"
+                           data-tab-target="#pro-tab"
+                           role="tab"
+                           aria-controls="pro-tab"
+                           data-tooltip="Unlock at 100 EXP">
+                            Pro
+                        </a>
+                    </li>
+                </ul>
+                <!-- XP Gauge -->
+                <div class="mt-4">
+                    <h3 class="text-lg font-bold">Experience Progress</h3>
+                    <div class="relative w-full h-6 bg-gray-200 rounded-full overflow-hidden">
+                        <div id="exp-bar" class="h-full transition-all duration-300 bg-blue-600" style="width: 0%;"></div>
+                    </div>
+                    <p class="mt-2">Level <span id="level">1</span> | EXP: <span id="exp-display">0/120</span></p>
+                </div>
+
+                <!-- Tab Content -->
+                <div data-tab-content="" class="p-5">
+                    <!-- Beginner Tab -->
+                    <!-- Beginner Tab -->
+                    <div id="beginner-tab" role="tabpanel" class="active">
+                        <div class="mt-4">
+                            <h3 class="text-xl font-semibold text-gray-800">Beginner Avatar Customization</h3>
+                            <!-- Embed Avataaars in an iframe -->
+                            <div class="max-w-4xl mx-auto mt-10 p-6 bg-white rounded-lg shadow-md">
+                                <h1 class="text-2xl font-bold text-center mb-6">Custom Avatar Generator</h1>
+
+                                <!-- Avataaars Iframe -->
+                                <iframe
+                                        id="avataaars-iframe"
+                                        src="https://getavataaars.com/"
+                                        style="width: 100%; height: 600px; border: none;"
+                                        allow="camera; microphone; clipboard-write">
+                                </iframe>
+
+                                <!-- Input for Image Tag -->
+                                <div class="mt-6">
+                                    <label for="avatar-img-tag" class="block text-sm font-medium text-gray-700 focus:ring-2 focus:ring-blue-600" >Paste Image Tag Here:</label>
+                                    <input
+                                            type="text"
+                                            id="avatar-img-tag"
+                                            placeholder='<img src="..."/>'
+                                            class="mt-1 block w-full rounded-md border-gray-300 shadow-sm">
+                                </div>
+
+                                <!-- Save Avatar Button -->
+                                <div class="mt-6 text-center">
+                                    <button id="save-avatar-url" class="bg-blue-600 text-white rounded-lg px-6 py-2 hover:bg-blue-700 transition duration-300">
+                                        Save Avatar
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Intermediate Tab -->
+                <div id="intermediate-tab" role="tabpanel" class="hidden opacity-0">
+                    <div class="mt-4">
+                        <h3 class="text-xl font-semibold text-gray-800">Intermediate Avatar Customization</h3>
+                        <!-- Intermediate customization content here -->
+                        <div class="max-w-4xl mx-auto mt-10 p-6 bg-white rounded-lg shadow-md">
+                            <h1 class="text-2xl font-bold text-center mb-6">DiceBear Avatar Generator</h1>
+
+                            <!-- Avatar Display -->
+                            <div class="flex justify-center mb-8">
+                                <img id="dicebear-avatar" src="https://api.dicebear.com/7.x/adventurer/svg?seed=JohnDoe" alt="Avatar" width="250" class="rounded-full">
+                            </div>
+
+                            <!-- Customization Options -->
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                <!-- Seed -->
+                                <div>
+                                    <label for="seed" class="block text-sm font-medium text-gray-700">Seed:</label>
+                                    <input type="text" id="seed" value="JohnDoe" oninput="updateDiceBearAvatar()" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm">
+                                </div>
+
+                                <!-- Style -->
+                                <div>
+                                    <label for="style" class="block text-sm font-medium text-gray-700">Style:</label>
+                                    <select id="style" onchange="updateDiceBearAvatar()" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm">
+                                        <option value="adventurer">Adventurer</option>
+                                        <option value="avataaars">Avataaars</option>
+                                        <option value="bottts">Bottts</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <!-- Save Avatar Button -->
+                            <div class="mt-6 text-center">
+                                <button id="save-dicebear-avatar" class="bg-blue-600 text-white rounded-lg px-6 py-2 hover:bg-blue-700 transition duration-300">
+                                    Save Avatar
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Pro Tab -->
+                <!-- Pro Tab -->
+                <div id="pro-tab" role="tabpanel" class="hidden opacity-0">
+                    <div class="mt-4">
+                        <h3 class="text-xl font-semibold text-gray-800">Pro Avatar Customization</h3>
+                        <!-- Pro customization content here -->
+                        <div class="max-w-4xl mx-auto mt-10 p-6 bg-white rounded-lg shadow-md text-center">
+                            <h2 class="text-2xl font-semibold text-gray-800 mb-4">Customize Your Avatar</h2>
+                            <p class="text-gray-600 mb-4">Use the Ready Player Me avatar system to create a unique look!</p>
+
+                            <!-- Ready Player Me Iframe -->
+                            <iframe
+                                    src="https://readyplayer.me/avatar?frameApi"
+                                    style="width: 100%; height: 600px; border: none;"
+                                    allow="camera; microphone; clipboard-write">
+                            </iframe>
+
+                            <!-- Input for .glb URL -->
+                            <div class="mt-6">
+                                <label for="glb-url" class="block text-sm font-medium text-gray-700">Paste .glb URL Here:</label>
+                                <input
+                                        type="text"
+                                        id="glb-url"
+                                        placeholder="https://models.readyplayer.me/..."
+                                        class="mt-1 block w-full rounded-md border-gray-300 shadow-sm">
+                            </div>
+
+                            <!-- Save Button -->
+                            <button id="save-ready-player-me-avatar" class="mt-4 px-6 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition duration-300">
+                                Save Avatar
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Badges Content -->
+    <div id="badges-content" class="tab-content">
+        <div class="max-w-4xl mx-auto mt-10 p-6 bg-white rounded-lg shadow-md">
+            <h2 class="text-2xl font-semibold text-gray-800 mb-6">Badges</h2>
+
+            <!-- Badge Categories -->
+            <div id="badge-categories-container">
+                <!-- Categories will be loaded dynamically -->
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    window.addEventListener("DOMContentLoaded", () => {
+        fetch("/api/user/xp")
+            .then(response => response.json())
+            .then(data => {
+                const xp = data.xp;
+                const maxXp = data.maxXp;
+                const percent = (xp / maxXp) * 100;
+
+                const xpBar = document.getElementById("xpBar");
+                xpBar.style.width = `${percent}%`;
+                xpBar.textContent = `${xp} / ${maxXp} XP`;
+            })
+            .catch(error => {
+                console.error("Failed to load XP:", error);
+            });
+    });
+</script>
+<script>
+    const currentXP = 500;  // Replace with dynamic value
+    const maxXP = 1000;
+    const xpBar = document.getElementById('xpBar');
+
+    const percent = (currentXP / maxXP) * 100;
+    xpBar.style.width = percent + '%';
+    xpBar.innerText = `${currentXP} / ${maxXP} XP`;
+</script>
+</body>
+</html>

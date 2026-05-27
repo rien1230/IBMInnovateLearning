@@ -1,0 +1,27 @@
+Week 5 (Feb 14 – Feb 19) Daniella O Makolo 
+
+Meeting 7 - 14th February – Online checkup of coding progress 
+
+- Took screenshots of issue board 
+
+- Rien is working on front end for dashboard and Jabir has finished his section everyone else is on schedule 
+
+- Discussed when to resolve code together as well as finishing the manual and demo script 
+
+- Set a final deadline for coding to be concluded so merging and debugging could take place 
+
+Meeting 8 - 18th February 
+- Resolved final code issues together and everyone finalised their work on the User Manual. 
+- Recording demo 
+- Issues with pacing and code wasn't running on some laptops after the merge -> had to record via my computer some stories were pure backend, so they were left out from the demo. 
+
+Sprint 2 (Feb 24 – Mar 26, 5 weeks) 
+
+Week 1 (Feb 24 – Mar 1)  Daniella O Makolo 
+
+Meeting 9 – 24th Feb – During the retrospective we identified issues with teamwork and participation & decided on a better time frame to meet for next sprint conclusion 
+ 
+
+Meeting 10 – 27th Feb – Met with supervisor to discuss how we felt about our submission, and where she approved our user stories for the next sprint 
+
+Decided who is going to be scrum master and when for the development section of the sprint 

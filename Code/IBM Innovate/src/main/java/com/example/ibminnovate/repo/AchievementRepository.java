@@ -1,0 +1,15 @@
+package com.example.ibminnovate.repo;
+
+import com.example.ibminnovate.model.Achievement;
+import com.example.ibminnovate.model.User;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
+
+import java.util.List;
+
+@Repository
+public interface AchievementRepository extends JpaRepository<Achievement, Long> {
+    List<Achievement> findByUser(User user);
+    
+}
+

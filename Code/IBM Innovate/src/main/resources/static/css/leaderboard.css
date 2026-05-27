@@ -1,0 +1,63 @@
+/* General styling */
+body {
+    font-family: Arial, sans-serif;
+    text-align: center;
+    background-color: #f4f4f4;
+    padding: 20px;
+}
+
+/* Leaderboard title */
+h1 {
+    margin-top: 20px;
+    font-size: 32px;
+    color: #333;
+}
+
+/* Table styling */
+table {
+    width: 60%;
+    margin: 20px auto;
+    border-collapse: collapse;
+    background: white;
+    font-size: 18px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+/* Header row */
+th {
+    background: #333;
+    color: white;
+    font-weight: bold;
+    padding: 12px;
+}
+
+/* Table rows */
+td {
+    padding: 12px;
+    border-bottom: 1px solid #ddd;
+}
+
+/* Alternate row colors */
+tr:nth-child(even) {
+    background: #f9f9f9;
+}
+
+/* Hover effect */
+tr:hover {
+    background-color: #e0e0e0;
+    transition: background 0.3s;
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+    table {
+        width: 90%;
+    }
+
+    th, td {
+        padding: 8px;
+        font-size: 16px;
+    }
+}

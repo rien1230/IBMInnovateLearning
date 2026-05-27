@@ -1,0 +1,11 @@
+Meeting 11 (Online – March 3rd):
+Facilitated a discussion on assigning weights to current issues in the sprint. The team collaboratively reviewed
+how each issue would function individually and how they would integrate together. Ensured everyone had a clear 
+understanding of dependencies and task expectations.
+
+Meeting 12 (Online – March 6th):
+Led the team in prioritising the completion of remaining user stories from the last sprint backlog. Oversaw 
+enhancements to several user stories and assigned them accordingly. Instructed Daniella to begin working on Sprint 1
+improvements as she had completed her assigned user story. Reminded the team to update their code repositories and 
+keep the Scrum board up to date. Recommended holding the next session in person to efficiently handle any compilation 
+or Git-related issues that may arise.

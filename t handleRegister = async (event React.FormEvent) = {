@@ -1,0 +1,215 @@
+[33mcommit 6891e3e45b4aa5e0fc56daa07b470b5445089750[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mstart-time[m[33m, [m[1;31morigin/start-time[m[33m)[m
+Author: KoroxElla <koroxstar6@gmail.com>
+Date:   Thu Feb 13 19:55:58 2025 +0000
+
+    Finalised the code(I think)
+
+[33mcommit 4684510a25e5b98a6d5cda70a8c46113bd87e4c5[m
+Merge: f863cde 669b729
+Author: KoroxElla <koroxstar6@gmail.com>
+Date:   Thu Feb 13 14:29:50 2025 +0000
+
+    code was changed
+
+[33mcommit f863cde40fc7ada26a53e3434de140edfef8a6da[m
+Author: KoroxElla <koroxstar6@gmail.com>
+Date:   Thu Feb 13 14:28:16 2025 +0000
+
+    Changed and added some stuff
+
+[33mcommit 0b1f6ae3000f875019cdd845ae49ba378701480d[m
+Author: KoroxElla <koroxstar6@gmail.com>
+Date:   Thu Feb 13 11:25:48 2025 +0000
+
+    Merged the login-register branch and start-time
+
+[33mcommit 669b72937641f376c0e510419413ef8761b12d3b[m
+Author: dom10 <dom10@student.le.ac.uk>
+Date:   Tue Feb 11 16:45:06 2025 +0000
+
+    Did the front end of my button
+
+[33mcommit 4f4aae385e9a6f7fc32342aeb3ea6d8b1b8a2ac4[m
+Author: KoroxElla <koroxstar6@gmail.com>
+Date:   Sun Feb 9 23:12:38 2025 +0000
+
+    Added the front end for the start button
+
+[33mcommit b8926f3e6b1a9b03250b82c508775bad2b8c2662[m[33m ([m[1;31morigin/user-profile[m[33m, [m[1;31morigin/record-complete[m[33m, [m[1;31morigin/filter-search[m[33m, [m[1;31morigin/dashboard[m[33m)[m
+Author: D O Makolo <dom10@student.le.ac.uk>
+Date:   Thu Feb 6 19:22:40 2025 +0000
+
+    gave each mandatory user story a sub member
+
+[33mcommit c893fef67bde9e478b0c55e25e9815eee0947c1e[m
+Author: D O Makolo <dom10@student.le.ac.uk>
+Date:   Fri Jan 31 21:00:32 2025 +0000
+
+    created code directory
+
+[33mcommit 811e778eef9bfaf7ffd4354c589ea2afed4cfce5[m
+Author: nasri <ns632@leicester.le.ac.uk>
+Date:   Fri Jan 31 02:49:01 2025 +0000
+
+    Added content to ns632.txt
+
+[33mcommit 97236dc79d0479f8fbfd00738b967aca2ea6d866[m
+Author: dom10 <dom10@student.le.ac.uk>
+Date:   Thu Jan 30 15:30:38 2025 +0000
+
+    Added the tech stack document
+
+[33mcommit 8ba51681670228f1db49309ef1e2bb0336e44c15[m
+Author: H Ali <ha393@student.le.ac.uk>
+Date:   Thu Jan 30 13:40:58 2025 +0000
+
+    Edit Definition-of-Done.txt
+
+[33mcommit 4530ad08b0cffceb53bf6aadd9b24eb5c5d8d577[m
+Author: H Ali <ha393@student.le.ac.uk>
+Date:   Thu Jan 30 13:35:08 2025 +0000
+
+    Edit Definition-of-Done.txt
+
+[33mcommit 618b0c617312881f3e0b4dbcee1000d86dd11cb8[m
+Author: nasri <ns632@leicester.le.ac.uk>
+Date:   Thu Jan 30 12:18:31 2025 +0000
+
+    Added ns632.txt
+
+[33mcommit 1c7a20f965711ab33a304c44dda57c877866a2c7[m
+Author: K Masood <km611@student.le.ac.uk>
+Date:   Wed Jan 29 20:24:34 2025 +0000
+
+    Created DoD file
+
+[33mcommit ea9ffcba11e41c9ba6849e11fb60a4da481b5f8e[m
+Author: dom10 <dom10@student.le.ac.uk>
+Date:   Wed Jan 29 18:11:40 2025 +0000
+
+    Daniella changed the content of her file
+
+[33mcommit eda3e946112887651ccc8313c819d84ab84e1779[m
+Author: M J Ali <mja58@student.le.ac.uk>
+Date:   Tue Jan 28 19:35:17 2025 +0000
+
+    Added a new text file
+
+[33mcommit 9d2528bc964a27abb68e0bf93e7a86b0d06cef1e[m
+Author: K Masood <km611@student.le.ac.uk>
+Date:   Tue Jan 28 19:34:44 2025 +0000
+
+    Update 2 files
+    
+    - /Users/km611
+    - /Users/km611.txt
+
+[33mcommit 7ed1eac36c1f041203a8405ca0d4ceca17e3c08a[m
+Author: M J Ali <mja58@student.le.ac.uk>
+Date:   Tue Jan 28 19:34:03 2025 +0000
+
+    Delete mja58
+
+[33mcommit c42223f56b60ffcb1f1ee2a0f71eb30c9bea9090[m
+Author: K Masood <km611@student.le.ac.uk>
+Date:   Tue Jan 28 19:33:59 2025 +0000
+
+    Added a new user file
+
+[33mcommit d1eb6eebcef6c6d831d2d82984e5eabc45f2844e[m
+Author: M J Ali <mja58@student.le.ac.uk>
+Date:   Tue Jan 28 19:33:47 2025 +0000
+
+    Added a new text file
+
+[33mcommit c86173d8fc03736526e13a67546b966d10682b4c[m
+Author: M J Ali <mja58@student.le.ac.uk>
+Date:   Tue Jan 28 19:33:14 2025 +0000
+
+    Delete mja58
+
+[33mcommit 3b0d947d8fcff4ad81fa5be1cd37c842368cd903[m
+Author: H Ali <ha393@student.le.ac.uk>
+Date:   Tue Jan 28 19:32:24 2025 +0000
+
+    Edit ha393.txt
+
+[33mcommit df35c059c90dc13982c02d97dbddae147c4dd1b4[m
+Author: D O Makolo <dom10@student.le.ac.uk>
+Date:   Tue Jan 28 19:32:22 2025 +0000
+
+    Edit README.md
+
+[33mcommit 6cd1729499cf614fb6995c058aaa9bf2fe0035fd[m
+Author: M J Ali <mja58@student.le.ac.uk>
+Date:   Tue Jan 28 19:32:10 2025 +0000
+
+    Added new user file
+
+[33mcommit a03c623520bbd2444d7b69d0fd53a72ccbcfe4ed[m
+Author: S M Whyte <smw54@student.le.ac.uk>
+Date:   Tue Jan 28 19:31:55 2025 +0000
+
+    Edit smw54
+
+[33mcommit 58572d51cc2daaee48bee964949f1f985f50f27a[m
+Author: H Ali <ha393@student.le.ac.uk>
+Date:   Tue Jan 28 19:31:40 2025 +0000
+
+    Add new file
+
+[33mcommit f1e3f4cb1d00a9f33b6b966649e226ac81ba7b15[m
+Author: S M Whyte <smw54@student.le.ac.uk>
+Date:   Tue Jan 28 19:31:33 2025 +0000
+
+    Added first commit file
+
+[33mcommit 580711747aa19e9d7276e14731e1691028fd0d27[m
+Merge: e67773c 9e6c218
+Author: dom10 <dom10@student.le.ac.uk>
+Date:   Tue Jan 28 19:29:33 2025 +0000
+
+    Merge branch 'main' of https://campus.cs.le.ac.uk/gitlab/co2302-2025/group-27
+    Merging cause it's neccessary
+
+[33mcommit e67773c413d78f700be0db21258631450ba5c3cf[m
+Author: dom10 <dom10@student.le.ac.uk>
+Date:   Tue Jan 28 19:27:44 2025 +0000
+
+    Daniella created the users folder and added her file
+
+[33mcommit 9e6c2180baee921ee590fbb7e4d22b3ecf662a2c[m
+Author: M J Ali <mja58@student.le.ac.uk>
+Date:   Tue Jan 28 19:27:14 2025 +0000
+
+    Update file README.md
+
+[33mcommit bf2493625efe3564aad879895c64de122b7e1fbc[m
+Author: M J Ali <mja58@student.le.ac.uk>
+Date:   Tue Jan 28 19:25:23 2025 +0000
+
+    Update file README.md
+
+[33mcommit c1d7ca36b96989b7c351d078ed4909f1761d2d1f[m
+Author: K Masood <km611@student.le.ac.uk>
+Date:   Tue Jan 28 19:23:48 2025 +0000
+
+    Update file README.md
+
+[33mcommit 22066c8a16f118261119b87d099e458dbf9e1cf8[m
+Author: S M Whyte <smw54@student.le.ac.uk>
+Date:   Tue Jan 28 19:17:05 2025 +0000
+
+    Edit README.md
+
+[33mcommit f60767a7ce824e6f08afc085041ffedce3dd61d3[m
+Author: S M Whyte <smw54@student.le.ac.uk>
+Date:   Tue Jan 28 19:16:26 2025 +0000
+
+    Edit README.md
+
+[33mcommit 6218ce534dfa9908bc29ab05de913d73af42f83c[m
+Author: W Wang <ww152@leicester.ac.uk>
+Date:   Fri Jan 24 15:44:13 2025 +0000
+
+    Initial commit

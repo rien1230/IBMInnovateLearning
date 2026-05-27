@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard Example</title>
+    <link rel="stylesheet" href="styles.css">
+    <script defer src="script.js"></script>
+</head>
+<body>
+    <nav class="navbar">
+        <a href="index.html" class="logo">IBMinnovate</a>
+        <div class="nav-buttons">
+            <a href="dashboard.html" class="nav-btn">Dashboard</a>
+            <a href="profile.html" class="nav-btn">Profile</a>
+            <a href="login.html" class="nav-btn">Log out</a>
+        </div>
+    </nav>
+
+    <div class="main-content">
+        <div class="content-container">
+            <h1 class="title">Welcome Back, User!</h1>
+             <!-- this should be a table that iterates through the list of courses the user takes-->
+            <div class="section-container">
+                <h2 class="course-title">My Courses</h2>
+                <div class="course-grid" id="course-grid">
+                    <div class="course-card">
+                        <img src="image.png" alt="Chatbot Course" class="course-image">
+                        <h2 class="course-title">Build Your Own Chatbots</h2>
+                        <p class="course-tags">Tags: Chatbots, AI</p>
+                        <p class="course-duration">Duration: 6 weeks</p>
+                        <p class="course-languages">Languages: English</p>
+                        <a href="#" class="learn-more">Learn More →</a>
+                    </div>
+                    <div class="course-card">
+                        <img src="image.png" alt="AI Fundamentals" class="course-image">
+                        <h2 class="course-title">Artificial Intelligence Fundamentals</h2>
+                        <p class="course-tags">Tags: AI, Fundamentals</p>
+                        <p class="course-duration">Duration: 10 hours</p>
+                        <p class="course-languages">Languages: English, French</p>
+                        <a href="#" class="learn-more">Learn More →</a>
+                    </div>
+                    <div class="course-card">
+                        <img src="image.png" alt="AI Foundations" class="course-image">
+                        <h2 class="course-title">AI Foundations: A Collaboration of ISTE and IBM</h2>
+                        <p class="course-tags">Tags: AI, ISTE, IBM</p>
+                        <p class="course-duration">Duration: 14 hours</p>
+                        <p class="course-languages">Languages: English, Spanish</p>
+                        <a href="#" class="learn-more">Learn More →</a>
+                    </div>
+                </div>
+            </div>
+
+            <!--khansas search and filter-->
+            <div class="section-container">
+                <form class="filter-container" th:action="@{/search}" method="GET">
+                    <div class="search-container">
+                        <input type="text" name="query" class="search-input" placeholder="Search courses..." th:value="${param.query}">
+                        <button type="submit" class="search-btn">Search</button>
+                    </div>
+                    <div class="filter-options">
+                        <label>
+                            <input type="checkbox" name="tags" value="AI" /> AI
+                        </label><br>
+                        <label>
+                            <input type="checkbox" name="tags" value="Cybersecurity" /> Cybersecurity
+                        </label><br>
+                        <label>
+                            <input type="checkbox" name="tags" value="Machine Learning" /> Machine Learning
+                        </label><br>
+                        <label>
+                            <input type="checkbox" name="tags" value="Programming" /> Programming
+                        </label><br>
+                    </div>
+                </form>
+            <br>
+
+            <!-- assumed the attributes are name, image, tags, duration, languages and link to the course-->
+            
+                <div th:if="${courses != null}">
+                    <div class="course-grid" id="course-grid">
+                        <div class="course-card" th:each="course : ${courses}">
+                            <img th:src="@{/images/{img}(img=${course.image})}" alt="Course Image" class="course-image">
+                            <h3 class="course-title" th:text="${course.courseName}">Course Name</h3>
+                            <p class="course-tags" th:text="${course.tags}">Tags</p>
+                            <p class="course-duration" th:text="'Duration: ' + ${course.duration}">Duration</p>
+                            <p class="course-languages" th:text="'Languages: ' + ${course.languages}">Languages</p>
+                            <!--id should redirect to course page where everything in the course object is displayed and the start and complete button-->
+                            <a th:href="@{/course/{id}(id=${course.id})}" class="learn-more">Learn more</a>
+                        </div>
+                    </div>
+                </div>
+
+                <div th:if="${courses == null or #lists.isEmpty(courses)}">
+                    <p>No courses found matching your search criteria.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!--toggles cards and text-->
+     <script>
+    const searchInput = document.getElementById('search');
+    const checkboxes = document.querySelectorAll('.category-filter');
+    const items = document.querySelectorAll('.content-grid .item');
+
+    function filterItems() {
+      const searchText = searchInput.value.toLowerCase();
+      const selectedCategories = Array.from(checkboxes)
+        .filter(checkbox => checkbox.checked)
+        .map(checkbox => checkbox.value.toLowerCase());
+
+      items.forEach(item => {
+        const itemText = item.textContent.toLowerCase();
+        const itemCategory = item.getAttribute('data-category').toLowerCase();
+        const matchesSearch = itemText.includes(searchText);
+        const matchesCategory = selectedCategories.length === 0 || selectedCategories.includes(itemCategory);
+
+        if (matchesSearch && matchesCategory) {
+          item.style.display = 'block';
+        } else {
+          item.style.display = 'none';
+        }
+      });
+    }
+
+    searchInput.addEventListener('input', filterItems);
+    checkboxes.forEach(checkbox => {
+      checkbox.addEventListener('change', filterItems);
+    });
+  </script>
+
+</body>
+</html>
